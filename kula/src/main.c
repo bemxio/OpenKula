@@ -14,7 +14,7 @@ int main() {
     TTF_Init();
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
-    SDL_Window* window = SDL_CreateWindow("Kula", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 480, 360, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_Event event;
 
@@ -32,7 +32,7 @@ int main() {
         SDL_RenderClear(renderer);
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(1000 / 30);
+        SDL_Delay(1000 / FPS);
     }
 
     SDL_DestroyRenderer(renderer);
