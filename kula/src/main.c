@@ -26,14 +26,17 @@ int main() {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_Event event;
 
+    bool loop = true;
+
     GameState state = {
         // TODO
     };
     GameAssets assets = {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
+        .bgm = Mix_LoadMUS(BGM_PATH)
     };
 
-    bool loop = true;
+    Mix_PlayMusic(assets.bgm, -1);
 
     while (loop) {
         while (SDL_PollEvent(&event)) {
@@ -51,6 +54,9 @@ int main() {
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
     }
+
+    SDL_DestroyTexture(assets.background);
+    Mix_FreeMusic(assets.bgm);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

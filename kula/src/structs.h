@@ -3,6 +3,7 @@
 
 struct GameAssets {
     SDL_Texture* background;
+    Mix_Music* bgm;
 };
 
 struct GameState {
