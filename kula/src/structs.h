@@ -3,6 +3,7 @@
 
 struct Entity {
     SDL_Rect rect;
+    bool active;
 };
 
 struct Player {
@@ -15,11 +16,12 @@ struct Player {
 struct Enemy {
     struct Entity;
 
-    bool animationCycle;
-    uint8_t animationTimer;
+    bool mouthCycle;
+    uint8_t mouthTimer;
+
+    uint32_t ghostTimer;
 };
 
-//typedef struct Entity Entity;
 typedef struct Player Player;
 typedef struct Enemy Enemy;
 

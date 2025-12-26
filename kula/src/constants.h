@@ -15,5 +15,6 @@
 
 #define ENEMY_ANIMATION_DELAY 10
 #define PLAYER_SPEED 10
+#define ENEMY_SPEED 8
 
 #endif

@@ -14,8 +14,8 @@ void GameLogic(GameState* state) {
     if (state->controls & 1 << 1) state->player.rect.x += PLAYER_SPEED;
     if (state->controls & 1 << 2) {
         if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
-            state->player.jumpTimer = 10;
             state->player.jumpCycle = true;
+            state->player.jumpTimer = 10;
         }
     }
 
@@ -27,25 +27,33 @@ void GameLogic(GameState* state) {
             state->player.jumpCycle = false;
             state->player.jumpTimer = 10;
         }
-    } else {
-        if (state->player.jumpTimer > 0) {
-            state->player.rect.y += PLAYER_SPEED;
-            state->player.jumpTimer--;
-        }
+    } else if (state->player.jumpTimer > 0) {
+        state->player.rect.y += PLAYER_SPEED;
+        state->player.jumpTimer--;
     }
 
-    if (!state->enemy.animationTimer) {
-        state->enemy.animationTimer = ENEMY_ANIMATION_DELAY;
-        state->enemy.animationCycle = !state->enemy.animationCycle;
+    if (state->enemy.rect.x >= -10) {
+        state->enemy.rect.x -= ENEMY_SPEED;
+    } else if (state->enemy.active) {
+        state->enemy.active = false;
+        state->enemy.ghostTimer = SDL_GetTicks() + 100;
+    } else if (state->enemy.ghostTimer <= SDL_GetTicks()) {
+        state->enemy.active = true;
+        state->enemy.rect.x = 447;
+    }
+
+    if (state->enemy.mouthTimer == 0) {
+        state->enemy.mouthTimer = ENEMY_ANIMATION_DELAY;
+        state->enemy.mouthCycle = !state->enemy.mouthCycle;
     } else {
-        state->enemy.animationTimer--;
+        state->enemy.mouthTimer--;
     }
 }
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
-    SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
-    SDL_RenderCopy(renderer, state->enemy.animationCycle ? assets->enemyClosed : assets->enemyOpen, NULL, &state->enemy.rect);
+    if (state->enemy.active) SDL_RenderCopy(renderer, state->enemy.mouthCycle ? assets->enemyClosed : assets->enemyOpen, NULL, &state->enemy.rect);
+    if (state->player.active) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
 }
 
 int main() {
@@ -63,8 +71,22 @@ int main() {
     GameState state = {
         .score = 0,
 
-        .player = { .rect = {53, 298, 37, 34} },
-        .enemy = { .rect = {447, 297, 45, 53} },
+        .player = {
+            .rect = {53, 298, 37, 34},
+            .active = true,
+
+            .jumpCycle = false,
+            .jumpTimer = 0
+        },
+        .enemy = {
+            .rect = {447, 297, 45, 53},
+            .active = true,
+
+            .mouthCycle = false,
+            .mouthTimer = 0,
+
+            .ghostTimer = 0
+        },
 
         .controls = 0
     };
