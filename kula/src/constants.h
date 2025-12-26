@@ -7,4 +7,6 @@
 #define GAME_HEIGHT 360
 #define FPS 30
 
+#define BACKGROUND_PATH "assets/background.png"
+
 #endif

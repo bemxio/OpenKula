@@ -8,6 +8,14 @@
 #include "constants.h"
 #include "structs.h"
 
+void GameLogic(GameState* state) {
+    // TODO
+}
+
+void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
+    SDL_RenderCopy(renderer, assets->background, NULL, NULL);
+}
+
 int main() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     IMG_Init(IMG_INIT_PNG);
@@ -17,6 +25,13 @@ int main() {
     SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_Event event;
+
+    GameState state = {
+        // TODO
+    };
+    GameAssets assets = {
+        .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
+    };
 
     bool loop = true;
 
@@ -28,8 +43,10 @@ int main() {
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+
+        GameLogic(&state);
+        GameRender(renderer, &state, &assets);
 
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
