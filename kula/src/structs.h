@@ -18,7 +18,6 @@ struct Enemy {
 
     bool mouthCycle;
     uint8_t mouthTimer;
-
     uint32_t ghostTimer;
 };
 

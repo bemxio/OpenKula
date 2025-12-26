@@ -42,6 +42,14 @@ void GameLogic(GameState* state) {
         state->enemy.rect.x = 447;
     }
 
+    if (state->enemy.active && SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
+        state->player.rect.x = 32;
+        state->player.rect.y = -21;
+        state->player.jumpTimer = 33;
+
+        state->score = 0;
+    }
+
     if (state->enemy.mouthTimer == 0) {
         state->enemy.mouthTimer = ENEMY_ANIMATION_DELAY;
         state->enemy.mouthCycle = !state->enemy.mouthCycle;
@@ -72,7 +80,7 @@ int main() {
         .score = 0,
 
         .player = {
-            .rect = {53, 298, 37, 34},
+            .rect = {43, 306, 37, 34},
             .active = true,
 
             .jumpCycle = false,
@@ -84,7 +92,6 @@ int main() {
 
             .mouthCycle = false,
             .mouthTimer = 0,
-
             .ghostTimer = 0
         },
 
