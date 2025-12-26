@@ -1,0 +1,16 @@
+# Object files
+*.o
+
+# Assets
+assets/
+
+# Build directories
+build/
+
+# Executables
+*.exe
+*.out
+
+# Archive files
+*.tar.gz
+*.zip
