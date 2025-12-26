@@ -14,6 +14,7 @@ void GameLogic(GameState* state) {
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
+    SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
 }
 
 int main() {
@@ -29,8 +30,9 @@ int main() {
     bool loop = true;
 
     GameState state = {
-        // TODO
+        .player = { .rect = {43, 306, 37, 34} },
     };
+
     GameAssets assets = {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
         .music = Mix_LoadMUS(BGM_PATH),

@@ -1,6 +1,22 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+struct Entity {
+    SDL_Rect rect;
+};
+
+struct Player {
+    struct Entity;
+};
+
+struct Enemy {
+    struct Entity;
+};
+
+//typedef struct Entity Entity;
+typedef struct Player Player;
+typedef struct Enemy Enemy;
+
 struct GameAssets {
     SDL_Texture* background;
     Mix_Music* music;
@@ -11,7 +27,8 @@ struct GameAssets {
 };
 
 struct GameState {
-    // TODO
+    Player player;
+    Enemy enemy;
 };
 
 typedef struct GameAssets GameAssets;
