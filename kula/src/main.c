@@ -33,10 +33,14 @@ int main() {
     };
     GameAssets assets = {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
-        .bgm = Mix_LoadMUS(BGM_PATH)
+        .music = Mix_LoadMUS(BGM_PATH),
+
+        .player = IMG_LoadTexture(renderer, PLAYER_PATH),
+        .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),
+        .enemyClosed = IMG_LoadTexture(renderer, ENEMY_CLOSED_PATH),
     };
 
-    Mix_PlayMusic(assets.bgm, -1);
+    Mix_PlayMusic(assets.music, -1);
 
     while (loop) {
         while (SDL_PollEvent(&event)) {
@@ -56,7 +60,10 @@ int main() {
     }
 
     SDL_DestroyTexture(assets.background);
-    Mix_FreeMusic(assets.bgm);
+    Mix_FreeMusic(assets.music);
+    SDL_DestroyTexture(assets.player);
+    SDL_DestroyTexture(assets.enemyOpen);
+    SDL_DestroyTexture(assets.enemyClosed);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

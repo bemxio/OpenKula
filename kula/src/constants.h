@@ -9,5 +9,8 @@
 
 #define BACKGROUND_PATH "assets/kulabakgrunn.png"
 #define BGM_PATH "assets/mortietunes.mp3"
+#define PLAYER_PATH "assets/kula.png"
+#define ENEMY_OPEN_PATH "assets/fiende01.png"
+#define ENEMY_CLOSED_PATH "assets/fiende02.png"
 
 #endif

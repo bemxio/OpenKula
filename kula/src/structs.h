@@ -3,7 +3,11 @@
 
 struct GameAssets {
     SDL_Texture* background;
-    Mix_Music* bgm;
+    Mix_Music* music;
+
+    SDL_Texture* player;
+    SDL_Texture* enemyOpen;
+    SDL_Texture* enemyClosed;    
 };
 
 struct GameState {
