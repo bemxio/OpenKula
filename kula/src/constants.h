@@ -13,4 +13,6 @@
 #define ENEMY_OPEN_PATH "assets/fiende01.png"
 #define ENEMY_CLOSED_PATH "assets/fiende02.png"
 
+#define ENEMY_ANIMATION_DELAY 10
+
 #endif

@@ -11,6 +11,9 @@ struct Player {
 
 struct Enemy {
     struct Entity;
+
+    bool animationCycle;
+    uint8_t animationTimer;
 };
 
 //typedef struct Entity Entity;

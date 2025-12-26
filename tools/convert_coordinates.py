@@ -4,10 +4,10 @@ def convert_coordinates(x: int, y: int, width: int, height: int) -> tuple[int, i
     """
     This function will convert values from Scratch's coordinate system to SDL's coordinate system.
     Scratch's coordinate system is a confusing mess that doesn't really make sense.
-    This seems to work for now, though it might fail later with other sprites.
+    While this should be technically correct, it isn't. Will need to debug later.
     """
 
-    return (x + 240 - width + width // 4, 180 - y - height // 2 + height // 4)
+    return (x + 240 - width // 2, 180 - y - height // 2)
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Convert Scratch coordinates to SDL coordinates.")

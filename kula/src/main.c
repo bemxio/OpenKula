@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -9,12 +10,18 @@
 #include "structs.h"
 
 void GameLogic(GameState* state) {
-    // TODO
+    if (!state->enemy.animationTimer) {
+        state->enemy.animationTimer = ENEMY_ANIMATION_DELAY;
+        state->enemy.animationCycle = !state->enemy.animationCycle;
+    } else {
+        state->enemy.animationTimer--;
+    }
 }
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
     SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
+    SDL_RenderCopy(renderer, state->enemy.animationCycle ? assets->enemyClosed : assets->enemyOpen, NULL, &state->enemy.rect);
 }
 
 int main() {
@@ -30,7 +37,8 @@ int main() {
     bool loop = true;
 
     GameState state = {
-        .player = { .rect = {43, 306, 37, 34} },
+        .player = { .rect = {53, 298, 37, 34} },
+        .enemy = { .rect = {447, 297, 45, 53} },
     };
 
     GameAssets assets = {
