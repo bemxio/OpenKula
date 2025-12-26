@@ -7,6 +7,9 @@ struct Entity {
 
 struct Player {
     struct Entity;
+
+    bool jumpCycle;
+    uint8_t jumpTimer;
 };
 
 struct Enemy {
@@ -30,8 +33,12 @@ struct GameAssets {
 };
 
 struct GameState {
+    int32_t score;
+ 
     Player player;
     Enemy enemy;
+
+    uint8_t controls;
 };
 
 typedef struct GameAssets GameAssets;

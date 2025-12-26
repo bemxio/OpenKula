@@ -14,5 +14,6 @@
 #define ENEMY_CLOSED_PATH "assets/fiende02.png"
 
 #define ENEMY_ANIMATION_DELAY 10
+#define PLAYER_SPEED 10
 
 #endif

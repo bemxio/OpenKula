@@ -10,6 +10,30 @@
 #include "structs.h"
 
 void GameLogic(GameState* state) {
+    if (state->controls & 1 << 0) state->player.rect.x -= PLAYER_SPEED;
+    if (state->controls & 1 << 1) state->player.rect.x += PLAYER_SPEED;
+    if (state->controls & 1 << 2) {
+        if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
+            state->player.jumpTimer = 10;
+            state->player.jumpCycle = true;
+        }
+    }
+
+    if (state->player.jumpCycle) {
+        state->player.rect.y -= PLAYER_SPEED;
+        state->player.jumpTimer--;
+
+        if (state->player.jumpTimer == 0) {
+            state->player.jumpCycle = false;
+            state->player.jumpTimer = 10;
+        }
+    } else {
+        if (state->player.jumpTimer > 0) {
+            state->player.rect.y += PLAYER_SPEED;
+            state->player.jumpTimer--;
+        }
+    }
+
     if (!state->enemy.animationTimer) {
         state->enemy.animationTimer = ENEMY_ANIMATION_DELAY;
         state->enemy.animationCycle = !state->enemy.animationCycle;
@@ -37,8 +61,12 @@ int main() {
     bool loop = true;
 
     GameState state = {
+        .score = 0,
+
         .player = { .rect = {53, 298, 37, 34} },
         .enemy = { .rect = {447, 297, 45, 53} },
+
+        .controls = 0
     };
 
     GameAssets assets = {
@@ -47,7 +75,7 @@ int main() {
 
         .player = IMG_LoadTexture(renderer, PLAYER_PATH),
         .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),
-        .enemyClosed = IMG_LoadTexture(renderer, ENEMY_CLOSED_PATH),
+        .enemyClosed = IMG_LoadTexture(renderer, ENEMY_CLOSED_PATH)
     };
 
     Mix_PlayMusic(assets.music, -1);
@@ -57,6 +85,32 @@ int main() {
             switch (event.type) {
                 case SDL_QUIT:
                     loop = false; break;
+
+                case SDL_KEYDOWN:
+                    if (event.key.repeat) break;
+
+                    switch (event.key.keysym.sym) {
+                        case SDLK_LEFT:
+                            state.controls |= 1 << 0; break;
+                        case SDLK_RIGHT:
+                            state.controls |= 1 << 1; break;
+                        case SDLK_SPACE:
+                            state.controls |= 1 << 2; break;
+                    }
+
+                    break;
+
+                case SDL_KEYUP:
+                    switch (event.key.keysym.sym) {
+                        case SDLK_LEFT:
+                            state.controls &= ~(1 << 0); break;
+                        case SDLK_RIGHT:
+                            state.controls &= ~(1 << 1); break;
+                        case SDLK_SPACE:
+                            state.controls &= ~(1 << 2); break;
+                    }
+
+                    break;
             }
         }
 
