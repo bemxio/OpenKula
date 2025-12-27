@@ -15,13 +15,19 @@ ASSETS = $(wildcard $(ASSETS_DIR)/*)
 EXECUTABLE = kula
 
 # phony
-.PHONY: all clean run
+.PHONY: all clean distclean fullclean run
 
 # targets
 all: $(BUILD_DIR)/$(EXECUTABLE)
 
 clean:
 	$(RM) -r $(BUILD_DIR)
+
+distclean:
+	$(RM) $(BUILD_DIR)/*.o
+
+fullclean: clean
+	$(RM) -r $(ASSETS_DIR)
 
 run: $(BUILD_DIR)/$(EXECUTABLE)
 	./$<
