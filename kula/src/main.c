@@ -32,6 +32,32 @@ void GameLogic(GameState* state) {
         state->player.jumpTimer--;
     }
 
+    if (state->enemy.active) {
+        SDL_Rect scoreHitbox = {
+            .x = state->enemy.rect.x,
+            .y = state->enemy.rect.y - 100,
+            .w = state->enemy.rect.w,
+            .h = state->enemy.rect.h
+        };
+
+        if (SDL_HasIntersection(&state->player.rect, &scoreHitbox)) {
+            state->scoreTimer = SDL_GetTicks() + 200;
+        }
+
+        if (SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
+            state->player.rect.x = 32;
+            state->player.rect.y = -21;
+            state->player.jumpTimer = 33;
+
+            state->score = 0;
+        }
+    }
+
+    if (state->scoreTimer != 0 && state->scoreTimer <= SDL_GetTicks()) {
+        state->scoreTimer = 0;
+        state->score++;
+    }
+
     if (state->enemy.rect.x >= -10) {
         state->enemy.rect.x -= ENEMY_SPEED;
     } else if (state->enemy.active) {
@@ -40,14 +66,6 @@ void GameLogic(GameState* state) {
     } else if (state->enemy.ghostTimer <= SDL_GetTicks()) {
         state->enemy.active = true;
         state->enemy.rect.x = 447;
-    }
-
-    if (state->enemy.active && SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
-        state->player.rect.x = 32;
-        state->player.rect.y = -21;
-        state->player.jumpTimer = 33;
-
-        state->score = 0;
     }
 
     if (state->enemy.mouthTimer == 0) {
@@ -60,6 +78,7 @@ void GameLogic(GameState* state) {
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
+
     if (state->enemy.active) SDL_RenderCopy(renderer, state->enemy.mouthCycle ? assets->enemyClosed : assets->enemyOpen, NULL, &state->enemy.rect);
     if (state->player.active) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
 }

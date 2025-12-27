@@ -35,7 +35,8 @@ struct GameAssets {
 
 struct GameState {
     int32_t score;
- 
+    uint32_t scoreTimer;
+
     Player player;
     Enemy enemy;
 
