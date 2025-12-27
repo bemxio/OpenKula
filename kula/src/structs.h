@@ -31,7 +31,7 @@ struct GameAssets {
 
     SDL_Texture* player;
     SDL_Texture* enemyOpen;
-    SDL_Texture* enemyClosed;    
+    SDL_Texture* enemyClosed;
 };
 
 struct GameState {

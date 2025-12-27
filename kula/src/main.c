@@ -10,7 +10,7 @@
 #include "structs.h"
 
 void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
-    SDL_Rect rect = {SCORE_POSITION_X, SCORE_POSITION_Y, 0, 0};
+    SDL_Rect rect = SCORE_POSITION;
     SDL_Color color = SCORE_COLOR;
 
     char scoreText[16];
@@ -194,6 +194,7 @@ int main() {
 
     SDL_DestroyTexture(assets.background);
     Mix_FreeMusic(assets.music);
+    TTF_CloseFont(assets.font);
     SDL_DestroyTexture(assets.player);
     SDL_DestroyTexture(assets.enemyOpen);
     SDL_DestroyTexture(assets.enemyClosed);
