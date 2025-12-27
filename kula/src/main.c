@@ -133,7 +133,7 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     RenderScore(renderer, assets->font, state->score);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
