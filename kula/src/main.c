@@ -9,6 +9,24 @@
 #include "constants.h"
 #include "structs.h"
 
+void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
+    SDL_Rect rect = {SCORE_POSITION_X, SCORE_POSITION_Y, 0, 0};
+    SDL_Color color = SCORE_COLOR;
+
+    char scoreText[16];
+
+    snprintf(scoreText, sizeof(scoreText), "score: %d", score);
+    TTF_SizeText(font, scoreText, &rect.w, &rect.h);
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText, color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_RenderCopy(renderer, texture, NULL, &rect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+}
+
 void GameLogic(GameState* state) {
     if (state->controls & 1 << 0) state->player.rect.x -= PLAYER_SPEED;
     if (state->controls & 1 << 1) state->player.rect.x += PLAYER_SPEED;
@@ -40,7 +58,7 @@ void GameLogic(GameState* state) {
             .h = state->enemy.rect.h
         };
 
-        if (SDL_HasIntersection(&state->player.rect, &scoreHitbox)) {
+        if (state->scoreTimer == 0 && SDL_HasIntersection(&state->player.rect, &scoreHitbox)) {
             state->scoreTimer = SDL_GetTicks() + 200;
         }
 
@@ -81,6 +99,8 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
 
     if (state->enemy.active) SDL_RenderCopy(renderer, state->enemy.mouthCycle ? assets->enemyClosed : assets->enemyOpen, NULL, &state->enemy.rect);
     if (state->player.active) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
+
+    RenderScore(renderer, assets->font, state->score);
 }
 
 int main() {
@@ -120,6 +140,7 @@ int main() {
     GameAssets assets = {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
         .music = Mix_LoadMUS(BGM_PATH),
+        .font = TTF_OpenFont(FONT_PATH, SCORE_SIZE),
 
         .player = IMG_LoadTexture(renderer, PLAYER_PATH),
         .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),

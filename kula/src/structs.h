@@ -27,6 +27,7 @@ typedef struct Enemy Enemy;
 struct GameAssets {
     SDL_Texture* background;
     Mix_Music* music;
+    TTF_Font* font;
 
     SDL_Texture* player;
     SDL_Texture* enemyOpen;
