@@ -2,7 +2,6 @@ from argparse import ArgumentParser
 
 def convert_coordinates(x: int, y: int, width: int, height: int) -> tuple[tuple[int, int], tuple[int, int]]:
     """
-    This function will convert values from Scratch's coordinate system to SDL's coordinate system.
     I gotta be honest, Scratch's coordinate system is kind of confusing, to say the least.
     For whatever reason, Kula's origin seems to differ from the standard Scratch sprite origin by a little bit, requiring the use of silly offsets.
     Hence, two sets of coordinates are returned: one for normal use, and one specifically for the player sprite.
