@@ -12,7 +12,7 @@ struct Player {
     bool jumpCycle;
     uint8_t jumpTimer;
 
-    bool isFalling;
+    uint32_t fallingTimer;
 };
 
 struct Enemy {
@@ -20,6 +20,7 @@ struct Enemy {
 
     bool mouthCycle;
     uint8_t mouthTimer;
+
     uint32_t ghostTimer;
 };
 
