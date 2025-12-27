@@ -11,6 +11,8 @@ struct Player {
 
     bool jumpCycle;
     uint8_t jumpTimer;
+
+    bool isFalling;
 };
 
 struct Enemy {

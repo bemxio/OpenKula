@@ -28,12 +28,14 @@ void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
 }
 
 void GameLogic(GameState* state) {
-    if (state->controls & 1 << 0) state->player.rect.x -= PLAYER_SPEED;
-    if (state->controls & 1 << 1) state->player.rect.x += PLAYER_SPEED;
-    if (state->controls & 1 << 2) {
-        if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
-            state->player.jumpCycle = true;
-            state->player.jumpTimer = 10;
+    if (!state->player.isFalling) {
+        if (state->controls & 1 << 0) state->player.rect.x -= PLAYER_SPEED;
+        if (state->controls & 1 << 1) state->player.rect.x += PLAYER_SPEED;
+        if (state->controls & 1 << 2) {
+            if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
+                state->player.jumpCycle = true;
+                state->player.jumpTimer = 10;
+            }
         }
     }
 
@@ -48,6 +50,8 @@ void GameLogic(GameState* state) {
     } else if (state->player.jumpTimer > 0) {
         state->player.rect.y += PLAYER_SPEED;
         state->player.jumpTimer--;
+    } else if (state->player.isFalling) {
+        state->player.isFalling = false;
     }
 
     if (state->enemy.active) {
@@ -65,7 +69,9 @@ void GameLogic(GameState* state) {
         if (SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
             state->player.rect.x = 32;
             state->player.rect.y = -21;
+
             state->player.jumpTimer = 33;
+            state->player.isFalling = true;
 
             state->score = 0;
         }
@@ -123,7 +129,9 @@ int main() {
             .active = true,
 
             .jumpCycle = false,
-            .jumpTimer = 0
+            .jumpTimer = 0,
+
+            .isFalling = false
         },
         .enemy = {
             .rect = {447, 297, 45, 53},
