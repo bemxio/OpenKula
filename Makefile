@@ -1,19 +1,18 @@
 # constants
-GAME_TARGETS := kula kula3D kulatwo
+GAME_TARGETS = kula kula3D kulatwo
+PYTHON = python3
 
 # phony
-.PHONY: all clean $(GAME_TARGETS)
+.PHONY: all $(GAME_TARGETS)
 
 # targets
 all: $(GAME_TARGETS)
 
-clean:
-	@for directory in $(GAME_TARGETS); do \
-		$(MAKE) -C $$directory clean; \
-	done
+$(GAME_TARGETS): %: %/assets
+	$(MAKE) -C $@ $(filter-out $@,$(MAKECMDGOALS))
 
-$(GAME_TARGETS):
-	@$(MAKE) -C $@ $(filter-out $@,$(MAKECMDGOALS))
+%/assets:
+	$(PYTHON) tools/copy_assets_to_game.py $*
 
 # empty rule to avoid "No rule to make target" errors
 %:
