@@ -34,6 +34,7 @@ run: $(BUILD_DIR)/$(EXECUTABLE)
 
 # rules
 $(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS) | $(ASSETS) $(BUILD_DIR)
+	cp -r $(ASSETS_DIR) $(BUILD_DIR)
 	$(CC) $(CFLAGS) $^ $(LDLIBS) -o $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(HEADERS) $(BUILD_DIR)
