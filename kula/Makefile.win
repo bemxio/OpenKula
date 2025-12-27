@@ -33,10 +33,10 @@ dist: $(BUILD_DIR)/$(EXECUTABLE)
 		/usr/$(PREFIX)/bin/libwinpthread-1.dll \
 		/usr/$(PREFIX)/bin/libssp-0.dll $(BUILD_DIR)/
 
-	zip -q -j $(basename $(EXECUTABLE)).zip $(BUILD_DIR)/* -x *.o
+	cd $(BUILD_DIR) && zip -q -r ../$(basename $(EXECUTABLE)).zip . -x *.o
 
 clean:
-	$(RM) -r $(BUILD_DIR)
+	$(RM) -r $(BUILD_DIR) $(basename $(EXECUTABLE)).zip
 
 distclean: clean
 	$(RM) -r $(ASSETS_DIR)
