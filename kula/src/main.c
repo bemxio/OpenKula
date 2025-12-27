@@ -90,9 +90,14 @@ void GameLogic(GameState* state) {
         if (SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
             state->player.rect.x = 32;
             state->player.rect.y = -21;
+
             state->player.fallingTimer = SDL_GetTicks() + 1000;
 
+            state->player.jumpTimer = 0;
+            state->player.jumpCycle = false;
+
             state->score = 0;
+            state->scoreTimer = 0;
         }
     }
 
