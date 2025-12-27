@@ -29,8 +29,22 @@ void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
 
 void GameLogic(GameState* state) {
     if (!state->player.isFalling) {
-        if (state->controls & 1 << 0) state->player.rect.x -= PLAYER_SPEED;
-        if (state->controls & 1 << 1) state->player.rect.x += PLAYER_SPEED;
+        if (state->controls & 1 << 0) {
+            if (state->player.rect.x + (state->player.rect.w / 2) > 0) {
+                state->player.rect.x -= PLAYER_SPEED;
+            } else {
+                state->player.rect.x = 0 - (state->player.rect.w / 2);
+            }
+        }
+
+        if (state->controls & 1 << 1) {
+            if (state->player.rect.x + (state->player.rect.w / 2) < GAME_WIDTH) {
+                state->player.rect.x += PLAYER_SPEED;
+            } else {
+                state->player.rect.x = GAME_WIDTH - (state->player.rect.w / 2);
+            }
+        }
+
         if (state->controls & 1 << 2) {
             if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
                 state->player.jumpCycle = true;
