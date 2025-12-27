@@ -91,13 +91,13 @@ void GameLogic(GameState* state) {
             state->player.rect.x = 32;
             state->player.rect.y = -21;
 
-            state->player.fallingTimer = SDL_GetTicks() + 1000;
-
             state->player.jumpTimer = 0;
             state->player.jumpCycle = false;
 
             state->score = 0;
             state->scoreTimer = 0;
+
+            state->player.fallingTimer = SDL_GetTicks() + 1000;
         }
     }
 
@@ -139,7 +139,7 @@ int main() {
     TTF_Init();
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
-    SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_RESIZABLE);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_Event event;
 
@@ -179,6 +179,7 @@ int main() {
         .enemyClosed = IMG_LoadTexture(renderer, ENEMY_CLOSED_PATH)
     };
 
+    SDL_RenderSetLogicalSize(renderer, GAME_WIDTH, GAME_HEIGHT);
     Mix_PlayMusic(assets.music, -1);
 
     while (loop) {
