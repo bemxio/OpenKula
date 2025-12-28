@@ -134,19 +134,21 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
 }
 
 int main(int argc, char* argv[]) {
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
     SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_RESIZABLE);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_GameController* controller = NULL;
     SDL_Event event;
 
     bool loop = true;
 
     GameState state = {
         .score = 0,
+        .scoreTimer = 0,
 
         .player = {
             .rect = {43, 306, 37, 34},
@@ -213,6 +215,44 @@ int main(int argc, char* argv[]) {
                     }
 
                     break;
+
+                case SDL_CONTROLLERDEVICEADDED:
+                    if (controller == NULL) {
+                        controller = SDL_GameControllerOpen(event.cdevice.which);
+                    }
+
+                    break;
+
+                case SDL_CONTROLLERDEVICEREMOVED:
+                    if (SDL_GameControllerFromInstanceID(event.cdevice.which) == controller) {
+                        SDL_GameControllerClose(controller); controller = NULL;
+                    }
+
+                    break;
+
+                case SDL_CONTROLLERBUTTONDOWN:
+                    switch (event.cbutton.button) {
+                        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                            state.controls |= 1 << 0; break;
+                        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                            state.controls |= 1 << 1; break;
+                        case SDL_CONTROLLER_BUTTON_A:
+                            state.controls |= 1 << 2; break;
+                    }
+
+                    break;
+
+                case SDL_CONTROLLERBUTTONUP:
+                    switch (event.cbutton.button) {
+                        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                            state.controls &= ~(1 << 0); break;
+                        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                            state.controls &= ~(1 << 1); break;
+                        case SDL_CONTROLLER_BUTTON_A:
+                            state.controls &= ~(1 << 2); break;
+                    }
+
+                    break;
             }
         }
 
@@ -232,6 +272,7 @@ int main(int argc, char* argv[]) {
     SDL_DestroyTexture(assets.enemyOpen);
     SDL_DestroyTexture(assets.enemyClosed);
 
+    if (controller != NULL) SDL_GameControllerClose(controller);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
