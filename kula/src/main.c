@@ -1,13 +1,14 @@
-#include <stdbool.h>
-#include <stdint.h>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "constants.h"
 #include "structs.h"
+#include "utils.h"
 
 void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
     SDL_Rect rect = SCORE_POSITION;
@@ -28,7 +29,7 @@ void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
 }
 
 void GameLogic(GameState* state) {
-    if (state->player.fallingTimer == 0) {
+    if (!state->player.glideState.active) {
         if (state->controls & 1 << 0) {
             if (state->player.rect.x + (state->player.rect.w / 2) > 0) {
                 state->player.rect.x -= PLAYER_SPEED;
@@ -66,13 +67,8 @@ void GameLogic(GameState* state) {
         state->player.jumpTimer--;
     }
 
-    if (state->player.fallingTimer != 0) {
-        if (state->player.fallingTimer <= SDL_GetTicks() || state->player.rect.y >= 309) {
-            state->player.rect.y = 309;
-            state->player.fallingTimer = 0;
-        } else {
-            state->player.rect.y += PLAYER_FALL_SPEED;
-        }
+    if (state->player.glideState.active) {
+        UpdateGlide((Entity*)&state->player);
     }
 
     if (state->enemy.active) {
@@ -96,7 +92,7 @@ void GameLogic(GameState* state) {
             state->score = 0;
             state->scoreTimer = 0;
 
-            state->player.fallingTimer = SDL_GetTicks() + 1000;
+            StartGlide((Entity*)&state->player, 30, 309, 1000);
         }
     }
 
@@ -152,15 +148,31 @@ int main(int argc, char* argv[]) {
         .player = {
             .rect = PLAYER_INITIAL_RECT,
             .active = true,
+            .glideState = {
+                .active = false,
+
+                .startX = 0, .startY = 0,
+                .targetX = 0, .targetY = 0,
+
+                .startTime = 0,
+                .duration = 0
+            },
 
             .jumpCycle = false,
-            .jumpTimer = 0,
-
-            .fallingTimer = 0
+            .jumpTimer = 0
         },
         .enemy = {
             .rect = ENEMY_INITIAL_RECT,
             .active = true,
+            .glideState = {
+                .active = false,
+
+                .startX = 0, .startY = 0,
+                .targetX = 0, .targetY = 0,
+
+                .startTime = 0,
+                .duration = 0
+            },
 
             .mouthCycle = false,
             .mouthTimer = 0,
