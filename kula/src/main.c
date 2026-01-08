@@ -34,6 +34,8 @@ void GameLogic(GameState* state) {
                 state->player.jumpTimer = 10;
             }
         }
+    } else {
+        UpdateGlide((Entity*)&state->player);
     }
 
     if (state->player.jumpCycle) {
@@ -47,10 +49,6 @@ void GameLogic(GameState* state) {
     } else if (state->player.jumpTimer > 0) {
         state->player.rect.y += PLAYER_SPEED;
         state->player.jumpTimer--;
-    }
-
-    if (state->player.glideState.active) {
-        UpdateGlide((Entity*)&state->player);
     }
 
     if (state->enemy.active) {
@@ -83,14 +81,18 @@ void GameLogic(GameState* state) {
         state->score++;
     }
 
-    if (state->enemy.rect.x >= -10) {
-        state->enemy.rect.x -= ENEMY_SPEED;
-    } else if (state->enemy.active) {
-        state->enemy.active = false;
-        state->enemy.ghostTimer = SDL_GetTicks() + 100;
-    } else if (state->enemy.ghostTimer <= SDL_GetTicks()) {
-        state->enemy.active = true;
-        state->enemy.rect.x = 447;
+    if (!state->enemy.glideState.active) {
+        if (state->enemy.ghostTimer <= SDL_GetTicks()) {
+            state->enemy.active = true;
+            state->enemy.rect.x = 447;
+
+            StartGlide((Entity*)&state->enemy, -15, 294, 2000);
+        } else {
+            state->enemy.active = false;
+            state->enemy.ghostTimer = SDL_GetTicks() + 100;
+        }
+    } else {
+        UpdateGlide((Entity*)&state->enemy);
     }
 
     if (state->enemy.mouthTimer == 0) {
