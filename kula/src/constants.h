@@ -15,8 +15,10 @@
 #define PLAYER_PATH "assets/kula.png"
 
 #define ENEMY_ANIMATION_DELAY 10
+#define ENEMY_INITIAL_RECT {447, 294, 48, 53}
 #define ENEMY_SPEED 8
 
+#define PLAYER_INITIAL_RECT {41, 308, 37, 34}
 #define PLAYER_SPEED 10
 #define PLAYER_FALL_SPEED 11
 

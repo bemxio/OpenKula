@@ -67,8 +67,8 @@ void GameLogic(GameState* state) {
     }
 
     if (state->player.fallingTimer != 0) {
-        if (state->player.fallingTimer <= SDL_GetTicks() || state->player.rect.y >= 306) {
-            state->player.rect.y = 306;
+        if (state->player.fallingTimer <= SDL_GetTicks() || state->player.rect.y >= 309) {
+            state->player.rect.y = 309;
             state->player.fallingTimer = 0;
         } else {
             state->player.rect.y += PLAYER_FALL_SPEED;
@@ -77,10 +77,9 @@ void GameLogic(GameState* state) {
 
     if (state->enemy.active) {
         SDL_Rect scoreHitbox = {
-            .x = state->enemy.rect.x,
-            .y = state->enemy.rect.y - 100,
-            .w = state->enemy.rect.w,
-            .h = state->enemy.rect.h
+            .x = state->enemy.rect.x - 6,
+            .y = state->enemy.rect.y - 97,
+            .w = 50, .h = 54
         };
 
         if (state->scoreTimer == 0 && SDL_HasIntersection(&state->player.rect, &scoreHitbox)) {
@@ -88,8 +87,8 @@ void GameLogic(GameState* state) {
         }
 
         if (SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
-            state->player.rect.x = 32;
-            state->player.rect.y = -21;
+            state->player.rect.x = 24;
+            state->player.rect.y = -18;
 
             state->player.jumpTimer = 0;
             state->player.jumpCycle = false;
@@ -151,7 +150,7 @@ int main(int argc, char* argv[]) {
         .scoreTimer = 0,
 
         .player = {
-            .rect = {43, 306, 37, 34},
+            .rect = PLAYER_INITIAL_RECT,
             .active = true,
 
             .jumpCycle = false,
@@ -160,7 +159,7 @@ int main(int argc, char* argv[]) {
             .fallingTimer = 0
         },
         .enemy = {
-            .rect = {447, 297, 45, 53},
+            .rect = ENEMY_INITIAL_RECT,
             .active = true,
 
             .mouthCycle = false,
