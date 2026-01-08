@@ -7,6 +7,10 @@
 *.mp3
 kula*/**/*.ttf
 
+# Scratch project files
+*.sb3
+*.json
+
 # Build directories
 build/
 
