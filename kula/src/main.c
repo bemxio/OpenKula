@@ -72,7 +72,7 @@ void GameLogic(GameState* state) {
             state->score = 0;
             state->scoreTimer = 0;
 
-            StartGlide((Entity*)&state->player, 30, 309, 1000);
+            StartGlide((Entity*)&state->player, 30, 309, PLAYER_GLIDE_DURATION);
         }
     }
 
@@ -86,10 +86,10 @@ void GameLogic(GameState* state) {
             state->enemy.active = true;
             state->enemy.rect.x = 447;
 
-            StartGlide((Entity*)&state->enemy, -15, 294, 2000);
+            StartGlide((Entity*)&state->enemy, -15, 294, ENEMY_GLIDE_DURATION);
         } else {
             state->enemy.active = false;
-            state->enemy.ghostTimer = SDL_GetTicks() + 100;
+            state->enemy.ghostTimer = SDL_GetTicks() + ENEMY_GHOST_DURATION;
         }
     } else {
         UpdateGlide((Entity*)&state->enemy);
