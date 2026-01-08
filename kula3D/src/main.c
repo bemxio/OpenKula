@@ -72,7 +72,7 @@ void GameLogic(GameState* state) {
             state->score = 0;
             state->scoreTimer = 0;
 
-            StartGlide((Entity*)&state->player, 30, 309, PLAYER_GLIDE_DURATION);
+            StartGlide((Entity*)&state->player, 30, 284, PLAYER_GLIDE_DURATION);
         }
     }
 
