@@ -30,6 +30,7 @@ typedef struct Enemy Enemy;
 
 struct GameAssets {
     SDL_Texture* background;
+    SDL_Texture* logo;
     Mix_Music* music;
     TTF_Font* font;
 

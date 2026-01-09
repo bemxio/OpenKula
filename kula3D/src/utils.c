@@ -6,7 +6,7 @@ void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
 
     char scoreText[16];
 
-    snprintf(scoreText, sizeof(scoreText), "score: %d", score);
+    snprintf(scoreText, sizeof(scoreText), SCORE_TEXT, score);
     TTF_SizeText(font, scoreText, &rect.w, &rect.h);
 
     SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText, color);

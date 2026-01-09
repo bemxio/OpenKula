@@ -54,6 +54,7 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     if (state->enemy.active) SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemy.rect);
     if (state->player.active) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
 
+    SDL_RenderCopy(renderer, assets->logo, NULL, &(SDL_Rect)LOGO_RECT);
     RenderScore(renderer, assets->font, state->score);
 }
 
@@ -90,6 +91,7 @@ int main(int argc, char* argv[]) {
 
     GameAssets assets = {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
+        .logo = IMG_LoadTexture(renderer, LOGO_PATH),
         .music = Mix_LoadMUS(BGM_PATH),
         .font = TTF_OpenFont(FONT_PATH, SCORE_SIZE),
 

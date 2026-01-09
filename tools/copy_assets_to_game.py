@@ -14,12 +14,13 @@ LOOKUP_TABLE = {
         "skrifttype.ttf": "skrifttype.ttf"
     },
     "kula3D": {
-        "2dbac4b426800a196082eb5b7c3a7538.svg": "trekant2.png",
-        "cd58cacba669ecd6177243b1cfbeaf34.svg": "trekant.png",
-        "d06adeb3a40b10f666861146e668179c.svg": "kula.png",
         "3dfdfd9f379a15b83ff175401117592d.svg": "background.png",
+        "d06adeb3a40b10f666861146e668179c.svg": "kula.png",
+        "30f36d96eb15f4ea5b82f492f0a3ba18.svg": "logo.png",
         "077b5dbb78e1bc63ae11b483d3f5b20f.mp3": "mortietunes.mp3",
-        "skrifttype.ttf": "skrifttype.ttf"
+        "skrifttype.ttf": "skrifttype.ttf",
+        "cd58cacba669ecd6177243b1cfbeaf34.svg": "trekant.png",
+        "2dbac4b426800a196082eb5b7c3a7538.svg": "trekant2.png"
     },
     "kulatwo": {}
 }
