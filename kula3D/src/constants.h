@@ -7,10 +7,10 @@
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
 
-#define BACKGROUND_PATH "assets/kulabakgrunn.png"
+#define BACKGROUND_PATH "assets/background.png"
 #define BGM_PATH "assets/mortietunes.mp3"
-#define ENEMY_CLOSED_PATH "assets/fiende02.png"
-#define ENEMY_OPEN_PATH "assets/fiende01.png"
+#define ENEMY_CLOSED_PATH "assets/trekant2.png"
+#define ENEMY_OPEN_PATH "assets/trekant.png"
 #define FONT_PATH "assets/skrifttype.ttf"
 #define PLAYER_PATH "assets/kula.png"
 

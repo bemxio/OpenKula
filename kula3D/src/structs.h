@@ -8,22 +8,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-struct GlideState {
-    bool active;
-
-    int32_t startX, startY;
-    int32_t targetX, targetY;
-
-    uint32_t startTime;
-    uint32_t duration;
-};
-
-typedef struct GlideState GlideState;
-
 struct Entity {
     SDL_Rect rect;
     bool active;
-    GlideState glideState;
 };
 
 struct Player {
@@ -35,10 +22,6 @@ struct Player {
 
 struct Enemy {
     struct Entity;
-
-    bool mouthCycle;
-    uint8_t mouthTimer;
-    uint32_t ghostTimer;
 };
 
 typedef struct Entity Entity;
@@ -57,7 +40,6 @@ struct GameAssets {
 
 struct GameState {
     int32_t score;
-    uint32_t scoreTimer;
 
     Player player;
     Enemy enemy;

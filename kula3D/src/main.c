@@ -11,31 +11,27 @@
 #include "utils.h"
 
 void GameLogic(GameState* state) {
-    if (!state->player.glideState.active) {
-        if (state->controls & 1 << 0) {
-            if (state->player.rect.x + (state->player.rect.w / 2) > 0) {
-                state->player.rect.x -= PLAYER_SPEED;
-            } else {
-                state->player.rect.x = 0 - (state->player.rect.w / 2);
-            }
+    if (state->controls & 1 << 0) {
+        if (state->player.rect.x + (state->player.rect.w / 2) > 0) {
+            state->player.rect.x -= PLAYER_SPEED;
+        } else {
+            state->player.rect.x = 0 - (state->player.rect.w / 2);
         }
+    }
 
-        if (state->controls & 1 << 1) {
-            if (state->player.rect.x + (state->player.rect.w / 2) < GAME_WIDTH) {
-                state->player.rect.x += PLAYER_SPEED;
-            } else {
-                state->player.rect.x = GAME_WIDTH - (state->player.rect.w / 2);
-            }
+    if (state->controls & 1 << 1) {
+        if (state->player.rect.x + (state->player.rect.w / 2) < GAME_WIDTH) {
+            state->player.rect.x += PLAYER_SPEED;
+        } else {
+            state->player.rect.x = GAME_WIDTH - (state->player.rect.w / 2);
         }
+    }
 
-        if (state->controls & 1 << 2) {
-            if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
-                state->player.jumpCycle = true;
-                state->player.jumpTimer = 10;
-            }
+    if (state->controls & 1 << 2) {
+        if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
+            state->player.jumpCycle = true;
+            state->player.jumpTimer = 10;
         }
-    } else {
-        UpdateGlide((Entity*)&state->player);
     }
 
     if (state->player.jumpCycle) {
@@ -50,63 +46,12 @@ void GameLogic(GameState* state) {
         state->player.rect.y += PLAYER_SPEED;
         state->player.jumpTimer--;
     }
-
-    if (state->enemy.active) {
-        SDL_Rect scoreHitbox = {
-            .x = state->enemy.rect.x - 6,
-            .y = state->enemy.rect.y - 97,
-            .w = 50, .h = 54
-        };
-
-        if (state->scoreTimer == 0 && SDL_HasIntersection(&state->player.rect, &scoreHitbox)) {
-            state->scoreTimer = SDL_GetTicks() + 200;
-        }
-
-        if (SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
-            state->player.rect.x = 24;
-            state->player.rect.y = -18;
-
-            state->player.jumpTimer = 0;
-            state->player.jumpCycle = false;
-
-            state->score = 0;
-            state->scoreTimer = 0;
-
-            StartGlide((Entity*)&state->player, 30, 284, PLAYER_GLIDE_DURATION);
-        }
-    }
-
-    if (state->scoreTimer != 0 && state->scoreTimer <= SDL_GetTicks()) {
-        state->scoreTimer = 0;
-        state->score++;
-    }
-
-    if (!state->enemy.glideState.active) {
-        if (state->enemy.ghostTimer <= SDL_GetTicks()) {
-            state->enemy.active = true;
-            state->enemy.rect.x = 447;
-
-            StartGlide((Entity*)&state->enemy, -15, 294, ENEMY_GLIDE_DURATION);
-        } else {
-            state->enemy.active = false;
-            state->enemy.ghostTimer = SDL_GetTicks() + ENEMY_GHOST_DURATION;
-        }
-    } else {
-        UpdateGlide((Entity*)&state->enemy);
-    }
-
-    if (state->enemy.mouthTimer == 0) {
-        state->enemy.mouthTimer = ENEMY_ANIMATION_DELAY;
-        state->enemy.mouthCycle = !state->enemy.mouthCycle;
-    } else {
-        state->enemy.mouthTimer--;
-    }
 }
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
 
-    if (state->enemy.active) SDL_RenderCopy(renderer, state->enemy.mouthCycle ? assets->enemyClosed : assets->enemyOpen, NULL, &state->enemy.rect);
+    if (state->enemy.active) SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemy.rect);
     if (state->player.active) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
 
     RenderScore(renderer, assets->font, state->score);
@@ -127,20 +72,10 @@ int main(int argc, char* argv[]) {
 
     GameState state = {
         .score = 0,
-        .scoreTimer = 0,
 
         .player = {
             .rect = PLAYER_INITIAL_RECT,
             .active = true,
-            .glideState = {
-                .active = false,
-
-                .startX = 0, .startY = 0,
-                .targetX = 0, .targetY = 0,
-
-                .startTime = 0,
-                .duration = 0
-            },
 
             .jumpCycle = false,
             .jumpTimer = 0
@@ -148,19 +83,6 @@ int main(int argc, char* argv[]) {
         .enemy = {
             .rect = ENEMY_INITIAL_RECT,
             .active = true,
-            .glideState = {
-                .active = false,
-
-                .startX = 0, .startY = 0,
-                .targetX = 0, .targetY = 0,
-
-                .startTime = 0,
-                .duration = 0
-            },
-
-            .mouthCycle = false,
-            .mouthTimer = 0,
-            .ghostTimer = 0
         },
 
         .controls = 0
