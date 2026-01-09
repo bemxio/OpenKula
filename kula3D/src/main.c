@@ -34,19 +34,19 @@ void GameLogic(GameState* state) {
                 state->player.jumpTimer = 10;
             }
         }
-    }
 
-    if (state->player.jumpCycle) {
-        state->player.rect.y -= PLAYER_SPEED;
-        state->player.jumpTimer--;
+        if (state->player.jumpCycle) {
+            state->player.rect.y -= PLAYER_SPEED;
+            state->player.jumpTimer--;
 
-        if (state->player.jumpTimer == 0) {
-            state->player.jumpCycle = false;
-            state->player.jumpTimer = 10;
+            if (state->player.jumpTimer == 0) {
+                state->player.jumpCycle = false;
+                state->player.jumpTimer = 10;
+            }
+        } else if (state->player.jumpTimer > 0) {
+            state->player.rect.y += PLAYER_SPEED;
+            state->player.jumpTimer--;
         }
-    } else if (state->player.jumpTimer > 0) {
-        state->player.rect.y += PLAYER_SPEED;
-        state->player.jumpTimer--;
     }
 
     if (state->enemy.active) {
@@ -73,7 +73,10 @@ void GameLogic(GameState* state) {
         }
 
         if (!state->enemy.hidden && SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
-            // TODO
+            state->player.active = false;
+            state->enemy.active = false;
+
+            Mix_HaltMusic();
         }
     }
 }
@@ -86,6 +89,10 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
 
     SDL_RenderCopy(renderer, assets->logo, NULL, &(SDL_Rect)LOGO_RECT);
     RenderScore(renderer, assets->font, state->score);
+
+    if (!state->player.active) {
+        RenderGameOver(renderer, assets->font);
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -126,7 +133,7 @@ int main(int argc, char* argv[]) {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
         .logo = IMG_LoadTexture(renderer, LOGO_PATH),
         .music = Mix_LoadMUS(BGM_PATH),
-        .font = TTF_OpenFont(FONT_PATH, SCORE_SIZE),
+        .font = TTF_OpenFont(FONT_PATH, 0),
 
         .player = IMG_LoadTexture(renderer, PLAYER_PATH),
         .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),
