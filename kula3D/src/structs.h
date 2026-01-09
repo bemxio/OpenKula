@@ -22,6 +22,9 @@ struct Player {
 
 struct Enemy {
     struct Entity;
+
+    uint32_t ghostTimer;
+    uint32_t cloneTimer;
 };
 
 typedef struct Entity Entity;
@@ -44,6 +47,7 @@ struct GameState {
 
     Player player;
     Enemy enemy;
+    Enemy enemyClones[2];
 
     uint8_t controls;
 };

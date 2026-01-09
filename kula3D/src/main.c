@@ -46,6 +46,25 @@ void GameLogic(GameState* state) {
         state->player.rect.y += PLAYER_SPEED;
         state->player.jumpTimer--;
     }
+
+    if (state->enemy.cloneTimer == 0) {
+        if (state->enemy.ghostTimer == 0) {
+            state->enemy.rect.x -= ENEMY_SPEED;
+
+            if (state->enemy.rect.x <= 0) {
+                state->enemy.rect.x = 0;
+                state->score++;
+                state->enemy.ghostTimer = SDL_GetTicks() + ENEMY_GHOST_DURATION;
+            }
+        } else if (state->enemy.ghostTimer <= SDL_GetTicks()) {
+            // TODO: activate clone
+            state->enemy.active = false;
+            state->enemy.ghostTimer = 0;
+            state->enemy.cloneTimer = SDL_GetTicks() + ENEMY_CLONE_INTERVAL;
+        }
+    } else if (state->enemy.cloneTimer <= SDL_GetTicks()) {
+        state->enemy.cloneTimer = 0;
+    }
 }
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
@@ -81,9 +100,11 @@ int main(int argc, char* argv[]) {
             .jumpCycle = false,
             .jumpTimer = 0
         },
-        .enemy = {
-            .rect = ENEMY_INITIAL_RECT,
-            .active = true,
+
+        .enemy = { .rect = ENEMY_INITIAL_RECT, .active = true },
+        .enemyClones = {
+            { .rect = ENEMY_INITIAL_RECT, .active = false },
+            { .rect = ENEMY_INITIAL_RECT, .active = false }
         },
 
         .controls = 0
