@@ -11,26 +11,28 @@
 #include "utils.h"
 
 void GameLogic(GameState* state) {
-    if (state->controls & 1 << 0) {
-        if (state->player.rect.x + (state->player.rect.w / 2) > 0) {
-            state->player.rect.x -= PLAYER_SPEED;
-        } else {
-            state->player.rect.x = 0 - (state->player.rect.w / 2);
+    if (state->player.active) {
+        if (state->controls & 1 << 0) {
+            if (state->player.rect.x + (state->player.rect.w / 2) > 0) {
+                state->player.rect.x -= PLAYER_SPEED;
+            } else {
+                state->player.rect.x = 0 - (state->player.rect.w / 2);
+            }
         }
-    }
 
-    if (state->controls & 1 << 1) {
-        if (state->player.rect.x + (state->player.rect.w / 2) < GAME_WIDTH) {
-            state->player.rect.x += PLAYER_SPEED;
-        } else {
-            state->player.rect.x = GAME_WIDTH - (state->player.rect.w / 2);
+        if (state->controls & 1 << 1) {
+            if (state->player.rect.x + (state->player.rect.w / 2) < GAME_WIDTH) {
+                state->player.rect.x += PLAYER_SPEED;
+            } else {
+                state->player.rect.x = GAME_WIDTH - (state->player.rect.w / 2);
+            }
         }
-    }
 
-    if (state->controls & 1 << 2) {
-        if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
-            state->player.jumpCycle = true;
-            state->player.jumpTimer = 10;
+        if (state->controls & 1 << 2) {
+            if (state->player.jumpTimer == 0 && !state->player.jumpCycle) {
+                state->player.jumpCycle = true;
+                state->player.jumpTimer = 10;
+            }
         }
     }
 
@@ -47,31 +49,40 @@ void GameLogic(GameState* state) {
         state->player.jumpTimer--;
     }
 
-    if (state->enemy.cloneTimer == 0) {
-        if (state->enemy.ghostTimer == 0) {
-            state->enemy.rect.x -= ENEMY_SPEED;
+    if (state->enemy.active) {
+        if (state->enemy.cloneTimer == 0) {
+            if (state->enemy.ghostTimer == 0) {
+                state->enemy.rect.x -= ENEMY_SPEED;
 
-            if (state->enemy.rect.x <= 0) {
-                state->enemy.rect.x = 0;
-                state->score++;
-                state->enemy.ghostTimer = SDL_GetTicks() + ENEMY_GHOST_DURATION;
+                if (state->enemy.rect.x <= 0) {
+                    state->score++;
+
+                    state->enemy.rect.x = 0;
+                    state->enemy.ghostTimer = SDL_GetTicks() + ENEMY_GHOST_DURATION;
+                }
+            } else if (state->enemy.ghostTimer <= SDL_GetTicks()) {
+                state->enemy.hidden = true;
+
+                state->enemy.ghostTimer = 0;
+                state->enemy.cloneTimer = SDL_GetTicks() + ENEMY_CLONE_INTERVAL;
+
+                // TODO: activate clone
             }
-        } else if (state->enemy.ghostTimer <= SDL_GetTicks()) {
-            // TODO: activate clone
-            state->enemy.active = false;
-            state->enemy.ghostTimer = 0;
-            state->enemy.cloneTimer = SDL_GetTicks() + ENEMY_CLONE_INTERVAL;
+        } else if (state->enemy.cloneTimer <= SDL_GetTicks()) {
+            state->enemy.cloneTimer = 0;
         }
-    } else if (state->enemy.cloneTimer <= SDL_GetTicks()) {
-        state->enemy.cloneTimer = 0;
+
+        if (!state->enemy.hidden && SDL_HasIntersection(&state->player.rect, &state->enemy.rect)) {
+            // TODO
+        }
     }
 }
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
 
-    if (state->enemy.active) SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemy.rect);
-    if (state->player.active) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
+    if (!state->enemy.hidden) SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemy.rect);
+    if (!state->player.hidden) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
 
     SDL_RenderCopy(renderer, assets->logo, NULL, &(SDL_Rect)LOGO_RECT);
     RenderScore(renderer, assets->font, state->score);
@@ -96,15 +107,16 @@ int main(int argc, char* argv[]) {
         .player = {
             .rect = PLAYER_INITIAL_RECT,
             .active = true,
+            .hidden = false,
 
             .jumpCycle = false,
             .jumpTimer = 0
         },
 
-        .enemy = { .rect = ENEMY_INITIAL_RECT, .active = true },
+        .enemy = { .rect = ENEMY_INITIAL_RECT, .active = true, .hidden = false, .ghostTimer = 0, .cloneTimer = 0 },
         .enemyClones = {
-            { .rect = ENEMY_INITIAL_RECT, .active = false },
-            { .rect = ENEMY_INITIAL_RECT, .active = false }
+            { .rect = ENEMY_INITIAL_RECT, .active = false, .hidden = false },
+            { .rect = ENEMY_INITIAL_RECT, .active = false, .hidden = false }
         },
 
         .controls = 0

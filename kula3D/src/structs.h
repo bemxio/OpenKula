@@ -11,6 +11,7 @@
 struct Entity {
     SDL_Rect rect;
     bool active;
+    bool hidden;
 };
 
 struct Player {
