@@ -35,6 +35,6 @@
 #define GAME_OVER_COLOR {255, 0, 0}
 #define GAME_OVER_SPACING 25
 #define GAME_OVER_SUBCAPTION_SIZE 32
-#define GAME_OVER_SUBCAPTION_TEXT "Press the jump button to restart"
+#define GAME_OVER_SUBCAPTION_TEXT "Press the Enter key to restart"
 
 #endif

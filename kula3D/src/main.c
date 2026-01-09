@@ -10,6 +10,25 @@
 #include "structs.h"
 #include "utils.h"
 
+void GameReset(GameState* state) {
+    state->player.rect = (SDL_Rect)PLAYER_INITIAL_RECT;
+    state->player.active = true;
+    state->player.hidden = false;
+    state->player.jumpCycle = false;
+    state->player.jumpTimer = 0;
+
+    state->enemy.rect = (SDL_Rect)ENEMY_INITIAL_RECT;
+    state->enemy.active = true;
+    state->enemy.hidden = false;
+    state->enemy.ghostTimer = 0;
+    state->enemy.cloneTimer = 0;
+
+    state->score = 0;
+
+    Mix_SetMusicPosition(0);
+    Mix_ResumeMusic();
+}
+
 void GameLogic(GameState* state) {
     if (state->player.active) {
         if (state->controls & 1 << 0) {
@@ -76,7 +95,7 @@ void GameLogic(GameState* state) {
             state->player.active = false;
             state->enemy.active = false;
 
-            Mix_HaltMusic();
+            Mix_PauseMusic();
         }
     }
 }
@@ -90,9 +109,7 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->logo, NULL, &(SDL_Rect)LOGO_RECT);
     RenderScore(renderer, assets->font, state->score);
 
-    if (!state->player.active) {
-        RenderGameOver(renderer, assets->font);
-    }
+    if (!state->player.active) RenderGameOver(renderer, assets->font);
 }
 
 int main(int argc, char* argv[]) {
@@ -159,6 +176,14 @@ int main(int argc, char* argv[]) {
                             state.controls |= 1 << 1; break;
                         case SDLK_SPACE:
                             state.controls |= 1 << 2; break;
+                        case SDLK_RETURN:
+                            if (!state.player.active) {
+                                GameReset(&state);
+                            }
+
+                            break;
+                        case SDLK_ESCAPE:
+                            loop = false; break;
                     }
 
                     break;
@@ -197,6 +222,14 @@ int main(int argc, char* argv[]) {
                             state.controls |= 1 << 1; break;
                         case SDL_CONTROLLER_BUTTON_A:
                             state.controls |= 1 << 2; break;
+                        case SDL_CONTROLLER_BUTTON_START:
+                            if (!state.player.active) {
+                                GameReset(&state);
+                            }
+
+                            break;
+                        case SDL_CONTROLLER_BUTTON_GUIDE:
+                            loop = false; break;
                     }
 
                     break;
