@@ -23,8 +23,9 @@
 #define PLAYER_INITIAL_RECT {41, 308, 37, 34}
 #define PLAYER_SPEED 10
 
-#define SCORE_POSITION {10, 10}
 #define SCORE_COLOR {255, 255, 255}
+#define SCORE_RECT {10, 5, 0, 0}
 #define SCORE_SIZE 24
+#define SCORE_TEXT "score: %d"
 
 #endif

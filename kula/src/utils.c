@@ -30,20 +30,24 @@ void UpdateGlide(Entity* entity) {
     }
 }
 
-void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
-    SDL_Rect rect = SCORE_POSITION;
-    SDL_Color color = SCORE_COLOR;
-
-    char scoreText[16];
-
-    snprintf(scoreText, sizeof(scoreText), "score: %d", score);
-    TTF_SizeText(font, scoreText, &rect.w, &rect.h);
-
-    SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText, color);
+void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Rect rect, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text, color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
     SDL_RenderCopy(renderer, texture, NULL, &rect);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
+}
+
+void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
+    SDL_Rect rect = SCORE_RECT;
+    char buffer[18];
+
+    snprintf(buffer, sizeof(buffer), SCORE_TEXT, score);
+
+    //TTF_SetFontSize(font, SCORE_SIZE);
+    TTF_SizeText(font, buffer, &rect.w, &rect.h);
+
+    RenderText(renderer, font, buffer, rect, (SDL_Color)SCORE_COLOR);
 }
