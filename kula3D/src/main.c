@@ -136,11 +136,11 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
 
     for (size_t i = 0; i < 2; i++) {
         if (!state->enemyClones[i].hidden) {
-            SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemyClones[i].rect);
+            SDL_RenderCopy(renderer, state->enemyClones[i].active ? assets->enemyOpen : assets->enemyClosed, NULL, &state->enemyClones[i].rect);
         }
     }
 
-    if (!state->enemy.hidden) SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemy.rect);
+    if (!state->enemy.hidden) SDL_RenderCopy(renderer, state->enemy.active ? assets->enemyOpen : assets->enemyClosed, NULL, &state->enemy.rect);
     if (!state->player.hidden) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
 
     SDL_RenderCopy(renderer, assets->logo, NULL, &(SDL_Rect)LOGO_RECT);
