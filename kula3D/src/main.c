@@ -23,6 +23,12 @@ void GameReset(GameState* state) {
     state->enemy.ghostTimer = 0;
     state->enemy.cloneTimer = 0;
 
+    for (size_t i = 0; i < 2; i++) {
+        state->enemyClones[i].rect = (SDL_Rect)ENEMY_INITIAL_RECT;
+        state->enemyClones[i].active = false;
+        state->enemyClones[i].hidden = true;
+    }
+
     state->score = 0;
 
     Mix_SetMusicPosition(0);
@@ -68,6 +74,27 @@ void GameLogic(GameState* state) {
         }
     }
 
+    for (size_t i = 0; i < 2; i++) {
+        if (state->enemyClones[i].active) {
+            state->enemyClones[i].rect.x -= ENEMY_SPEED;
+
+            if (state->enemyClones[i].rect.x <= 0) {
+                state->enemyClones[i].active = false;
+                state->enemyClones[i].hidden = true;
+            }
+
+            if (SDL_HasIntersection(&state->player.rect, &state->enemyClones[i].rect)) {
+                state->player.active = false;
+                state->enemy.active = false;
+
+                state->enemyClones[0].active = false;
+                state->enemyClones[1].active = false;
+
+                Mix_PauseMusic();
+            }
+        }
+    }
+
     if (state->enemy.active) {
         if (state->enemy.cloneTimer == 0) {
             if (state->enemy.ghostTimer == 0) {
@@ -85,7 +112,11 @@ void GameLogic(GameState* state) {
                 state->enemy.ghostTimer = 0;
                 state->enemy.cloneTimer = SDL_GetTicks() + ENEMY_CLONE_INTERVAL;
 
-                // TODO: activate clone
+                size_t i = !state->enemyClones[0].active ? 0 : 1;
+
+                state->enemyClones[i].rect = (SDL_Rect)ENEMY_INITIAL_RECT;
+                state->enemyClones[i].active = true;
+                state->enemyClones[i].hidden = false;
             }
         } else if (state->enemy.cloneTimer <= SDL_GetTicks()) {
             state->enemy.cloneTimer = 0;
@@ -102,6 +133,12 @@ void GameLogic(GameState* state) {
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
+
+    for (size_t i = 0; i < 2; i++) {
+        if (!state->enemyClones[i].hidden) {
+            SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemyClones[i].rect);
+        }
+    }
 
     if (!state->enemy.hidden) SDL_RenderCopy(renderer, assets->enemyOpen, NULL, &state->enemy.rect);
     if (!state->player.hidden) SDL_RenderCopy(renderer, assets->player, NULL, &state->player.rect);
@@ -139,8 +176,8 @@ int main(int argc, char* argv[]) {
 
         .enemy = { .rect = ENEMY_INITIAL_RECT, .active = true, .hidden = false, .ghostTimer = 0, .cloneTimer = 0 },
         .enemyClones = {
-            { .rect = ENEMY_INITIAL_RECT, .active = false, .hidden = false },
-            { .rect = ENEMY_INITIAL_RECT, .active = false, .hidden = false }
+            { .rect = ENEMY_INITIAL_RECT, .active = false, .hidden = true },
+            { .rect = ENEMY_INITIAL_RECT, .active = false, .hidden = true }
         },
 
         .controls = 0
