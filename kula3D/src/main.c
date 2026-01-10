@@ -23,7 +23,7 @@ void GameReset(GameState* state) {
     state->enemy.ghostTimer = 0;
     state->enemy.cloneTimer = 0;
 
-    for (size_t i = 0; i < 2; i++) {
+    for (size_t i = 0; i < ENEMY_CLONE_AMOUNT; i++) {
         state->enemyClones[i].rect = (SDL_Rect)ENEMY_INITIAL_RECT;
         state->enemyClones[i].active = false;
         state->enemyClones[i].hidden = true;
@@ -74,7 +74,7 @@ void GameLogic(GameState* state) {
         }
     }
 
-    for (size_t i = 0; i < 2; i++) {
+    for (size_t i = 0; i < ENEMY_CLONE_AMOUNT; i++) {
         if (state->enemyClones[i].active) {
             state->enemyClones[i].rect.x -= ENEMY_SPEED;
 
@@ -87,8 +87,9 @@ void GameLogic(GameState* state) {
                 state->player.active = false;
                 state->enemy.active = false;
 
-                state->enemyClones[0].active = false;
-                state->enemyClones[1].active = false;
+                for (size_t j = 0; j < ENEMY_CLONE_AMOUNT; j++) {
+                    state->enemyClones[j].active = false;
+                }
 
                 Mix_PauseMusic();
             }
@@ -112,11 +113,15 @@ void GameLogic(GameState* state) {
                 state->enemy.ghostTimer = 0;
                 state->enemy.cloneTimer = SDL_GetTicks() + ENEMY_CLONE_INTERVAL;
 
-                size_t i = !state->enemyClones[0].active ? 0 : 1;
+                for (size_t i = 0; i < ENEMY_CLONE_AMOUNT; i++) {
+                    if (state->enemyClones[i].active) continue;
 
-                state->enemyClones[i].rect = (SDL_Rect)ENEMY_INITIAL_RECT;
-                state->enemyClones[i].active = true;
-                state->enemyClones[i].hidden = false;
+                    state->enemyClones[i].rect = (SDL_Rect)ENEMY_INITIAL_RECT;
+                    state->enemyClones[i].active = true;
+                    state->enemyClones[i].hidden = false;
+
+                    break;
+                }
             }
         } else if (state->enemy.cloneTimer <= SDL_GetTicks()) {
             state->enemy.cloneTimer = 0;

@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "constants.h"
+
 struct Entity {
     SDL_Rect rect;
     bool active;
@@ -48,7 +50,7 @@ struct GameState {
 
     Player player;
     Enemy enemy;
-    Enemy enemyClones[2];
+    Enemy enemyClones[ENEMY_CLONE_AMOUNT];
 
     uint8_t controls;
 };
