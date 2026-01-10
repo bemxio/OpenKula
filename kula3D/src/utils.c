@@ -12,7 +12,7 @@ void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Re
 
 void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
     SDL_Rect rect = SCORE_RECT;
-    char buffer[10];
+    char buffer[18];
 
     snprintf(buffer, sizeof(buffer), SCORE_TEXT, score);
 
