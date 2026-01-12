@@ -22,7 +22,14 @@ LOOKUP_TABLE = {
         "cd58cacba669ecd6177243b1cfbeaf34.svg": "trekant.png",
         "2dbac4b426800a196082eb5b7c3a7538.svg": "trekant2.png"
     },
-    "kulatwo": {}
+    "kulatwo": {
+        "aeaf1f511fa2bef67371ed62528686df.svg": "fiende01.png",
+        "5fc0d3bc8029acfb10700893fc7b7733.svg": "fiende02.png",
+        "8a9336e1b924b53fb0d70634706a3392.svg": "kula.png",
+        "2fe2f71497a79460dd88fb83987c29b6.svg": "kulabakgrunn.png",
+        "077b5dbb78e1bc63ae11b483d3f5b20f.mp3": "mortietunes.mp3",
+        "skrifttype.ttf": "skrifttype.ttf"
+    }
 }
 
 def extract_png_from_svg(source: str, target: str) -> None:
