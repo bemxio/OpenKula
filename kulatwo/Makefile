@@ -12,7 +12,7 @@ HEADERS = $(wildcard $(SRC_DIR)/*.h)
 OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 ASSETS = $(wildcard $(ASSETS_DIR)/*)
 
-EXECUTABLE = kula
+EXECUTABLE = kulatwo
 
 # phony
 .PHONY: all clean distclean run

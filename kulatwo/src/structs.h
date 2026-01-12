@@ -26,41 +26,32 @@ struct Entity {
     GlideState glideState;
 };
 
-struct Player {
+struct Paddle {
     struct Entity;
-
-    bool jumpCycle;
-    uint8_t jumpTimer;
 };
 
-struct Enemy {
+struct Ball {
     struct Entity;
-
-    bool mouthCycle;
-    uint8_t mouthTimer;
-    uint32_t ghostTimer;
 };
 
 typedef struct Entity Entity;
-typedef struct Player Player;
-typedef struct Enemy Enemy;
+typedef struct Paddle Paddle;
+typedef struct Ball Ball;
 
 struct GameAssets {
     SDL_Texture* background;
     Mix_Music* music;
     TTF_Font* font;
 
-    SDL_Texture* player;
-    SDL_Texture* enemyOpen;
-    SDL_Texture* enemyClosed;
+    SDL_Texture* ball;
 };
 
 struct GameState {
     int32_t score;
     uint32_t scoreTimer;
 
-    Player player;
-    Enemy enemy;
+    Paddle paddle;
+    Ball ball;
 
     uint8_t controls;
 };
