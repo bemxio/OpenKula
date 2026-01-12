@@ -188,25 +188,29 @@ int main(int argc, char* argv[]) {
                 case SDL_KEYDOWN:
                     if (event.key.repeat) break;
 
-                    switch (event.key.keysym.sym) {
-                        case SDLK_LEFT:
+                    switch (event.key.keysym.scancode) {
+                        case SDL_SCANCODE_LEFT:
                             state.controls |= 1 << 0; break;
-                        case SDLK_RIGHT:
+                        case SDL_SCANCODE_RIGHT:
                             state.controls |= 1 << 1; break;
-                        case SDLK_SPACE:
+                        case SDL_SCANCODE_SPACE:
                             state.controls |= 1 << 2; break;
+                        default:
+                            break;
                     }
 
                     break;
 
                 case SDL_KEYUP:
-                    switch (event.key.keysym.sym) {
-                        case SDLK_LEFT:
+                    switch (event.key.keysym.scancode) {
+                        case SDL_SCANCODE_LEFT:
                             state.controls &= ~(1 << 0); break;
-                        case SDLK_RIGHT:
+                        case SDL_SCANCODE_RIGHT:
                             state.controls &= ~(1 << 1); break;
-                        case SDLK_SPACE:
+                        case SDL_SCANCODE_SPACE:
                             state.controls &= ~(1 << 2); break;
+                        default:
+                            break;
                     }
 
                     break;
