@@ -31,6 +31,9 @@ void GameLogic(GameState* state) {
     }
 
     if (!state->ball.glideState.active) {
+        state->ball.rect.x += BALL_SPEED * cosf(state->ball.direction * (M_PI / 180.0f));
+        state->ball.rect.y += BALL_SPEED * -sinf(state->ball.direction * (M_PI / 180.0f));
+
         if (state->ball.rect.x <= 0) {
             state->ball.direction = 180.0f - state->ball.direction;
         } else if (state->ball.rect.x + state->ball.rect.w >= GAME_WIDTH) {
@@ -42,11 +45,12 @@ void GameLogic(GameState* state) {
         } else if (state->ball.rect.y + state->ball.rect.h >= GAME_HEIGHT) {
             state->ball.direction = 360.0f - state->ball.direction;
         }
+    } else {
+        UpdateGlide((Entity*)&state->ball);
+    }
 
-        state->ball.rect.x += BALL_SPEED * cosf(state->ball.direction * (M_PI / 180.0f));
-        state->ball.rect.y += BALL_SPEED * -sinf(state->ball.direction * (M_PI / 180.0f));
-
-        if (state->ball.paddleTimer == 0 && SDL_HasIntersection(&state->ball.rect, &state->paddle.rect)) {
+    if (state->ball.paddleTimer == 0) {
+        if (SDL_HasIntersection(&state->ball.rect, &state->paddle.rect)) {
             state->ball.direction += rand() % ((190 - 170) + 1) + 170;
 
             state->ball.rect.x += BALL_SPEED * cosf(state->ball.direction * (M_PI / 180.0f));
@@ -54,11 +58,18 @@ void GameLogic(GameState* state) {
 
             state->score++;
             state->ball.paddleTimer = SDL_GetTicks() + BALL_PADDLE_COOLDOWN;
-        }        
+        }
+    } else if (state->ball.paddleTimer <= SDL_GetTicks()) {
+        state->ball.paddleTimer = 0;
     }
 
-    if (state->ball.paddleTimer != 0 && state->ball.paddleTimer <= SDL_GetTicks()) {
-        state->ball.paddleTimer = 0;
+    if (SDL_HasIntersection(&state->ball.rect, &(SDL_Rect)BARRIER_RECT)) {
+        state->score = 0;
+
+        state->ball.rect.x = 14;
+        state->ball.rect.y = 4;
+
+        StartGlide((Entity*)&state->ball, 27, 298, BALL_GLIDE_DURATION);
     }
 }
 
