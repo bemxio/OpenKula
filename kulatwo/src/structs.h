@@ -32,6 +32,8 @@ struct Paddle {
 
 struct Ball {
     struct Entity;
+
+    int16_t direction;
 };
 
 typedef struct Entity Entity;

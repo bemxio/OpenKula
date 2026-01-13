@@ -3,6 +3,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -26,6 +27,23 @@ void GameLogic(GameState* state) {
             state->paddle.rect.x = GAME_WIDTH - (state->paddle.rect.w / 2);
         }
     }
+
+    if (!state->ball.glideState.active) {
+        if (state->ball.rect.x <= 0) {
+            state->ball.direction = 180.0f - state->ball.direction;
+        } else if (state->ball.rect.x + state->ball.rect.w >= GAME_WIDTH) {
+            state->ball.direction = 180.0f - state->ball.direction;
+        }
+
+        if (state->ball.rect.y <= 0) {
+            state->ball.direction = 360.0f - state->ball.direction;
+        } else if (state->ball.rect.y + state->ball.rect.h >= GAME_HEIGHT) {
+            state->ball.direction = 360.0f - state->ball.direction;
+        }
+
+        state->ball.rect.x += BALL_SPEED * cosf(state->ball.direction * (M_PI / 180.0f));
+        state->ball.rect.y += -BALL_SPEED * sinf(state->ball.direction * (M_PI / 180.0f));
+    } 
 }
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
@@ -37,7 +55,11 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_SetRenderDrawColor(renderer, BARRIER_COLOR);
     SDL_RenderFillRect(renderer, &(SDL_Rect)BARRIER_RECT);
 
-    SDL_RenderCopy(renderer, assets->ball, NULL, &state->ball.rect);
+    SDL_RenderCopyEx(
+        renderer, assets->ball,
+        NULL, &state->ball.rect,
+        -state->ball.direction, NULL, SDL_FLIP_NONE
+    );
 
     RenderScore(renderer, assets->font, state->score);
 }
@@ -82,7 +104,9 @@ int main(int argc, char* argv[]) {
 
                 .startTime = 0,
                 .duration = 0
-            }
+            },
+
+            .direction = BALL_INITIAL_DIRECTION
         },
 
         .controls = 0
