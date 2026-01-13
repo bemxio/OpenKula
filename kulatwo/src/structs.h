@@ -34,6 +34,7 @@ struct Ball {
     struct Entity;
 
     int16_t direction;
+    uint32_t paddleTimer;
 };
 
 typedef struct Entity Entity;
@@ -50,7 +51,6 @@ struct GameAssets {
 
 struct GameState {
     int32_t score;
-    uint32_t scoreTimer;
 
     Paddle paddle;
     Ball ball;

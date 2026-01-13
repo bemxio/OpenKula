@@ -6,6 +6,8 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "constants.h"
 #include "structs.h"
@@ -42,8 +44,22 @@ void GameLogic(GameState* state) {
         }
 
         state->ball.rect.x += BALL_SPEED * cosf(state->ball.direction * (M_PI / 180.0f));
-        state->ball.rect.y += -BALL_SPEED * sinf(state->ball.direction * (M_PI / 180.0f));
-    } 
+        state->ball.rect.y += BALL_SPEED * -sinf(state->ball.direction * (M_PI / 180.0f));
+
+        if (state->ball.paddleTimer == 0 && SDL_HasIntersection(&state->ball.rect, &state->paddle.rect)) {
+            state->ball.direction += rand() % ((190 - 170) + 1) + 170;
+
+            state->ball.rect.x += BALL_SPEED * cosf(state->ball.direction * (M_PI / 180.0f));
+            state->ball.rect.y += BALL_SPEED * -sinf(state->ball.direction * (M_PI / 180.0f));
+
+            state->score++;
+            state->ball.paddleTimer = SDL_GetTicks() + BALL_PADDLE_COOLDOWN;
+        }        
+    }
+
+    if (state->ball.paddleTimer != 0 && state->ball.paddleTimer <= SDL_GetTicks()) {
+        state->ball.paddleTimer = 0;
+    }
 }
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
@@ -69,6 +85,8 @@ int main(int argc, char* argv[]) {
     IMG_Init(0);
     TTF_Init();
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
+    srand(time(NULL));
 
     SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_RESIZABLE);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
