@@ -14,6 +14,15 @@ void GameLogic(GameState* state) {}
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
+
+    SDL_SetRenderDrawColor(renderer, PADDLE_COLOR);
+    SDL_RenderFillRect(renderer, &state->paddle.rect);
+
+    SDL_SetRenderDrawColor(renderer, BARRIER_COLOR);
+    SDL_RenderFillRect(renderer, &(SDL_Rect)BARRIER_RECT);
+
+    SDL_RenderCopy(renderer, assets->ball, NULL, &state->ball.rect);
+
     RenderScore(renderer, assets->font, state->score);
 }
 
@@ -142,6 +151,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         GameLogic(&state);

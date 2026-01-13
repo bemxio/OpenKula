@@ -12,9 +12,14 @@
 #define FONT_PATH "assets/skrifttype.ttf"
 #define MUSIC_PATH "assets/mortietunes.mp3"
 
-#define PADDLE_INITIAL_RECT {0, 0, 0, 0} // TODO
+#define PADDLE_COLOR 255, 230, 0, 255
+#define PADDLE_INITIAL_RECT {4, 324, 89, 15}
+#define PADDLE_SPEED 15
 
-#define BALL_INITIAL_RECT {0, 0, 0, 0} // TODO
+#define BALL_INITIAL_RECT {318, 303, 39, 38}
+
+#define BARRIER_COLOR 255, 0, 0, 255
+#define BARRIER_RECT {-4, 349, 484, 13}
 
 #define SCORE_COLOR {255, 255, 255}
 #define SCORE_RECT {10, 5, 0, 0}
