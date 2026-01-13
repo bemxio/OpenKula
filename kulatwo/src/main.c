@@ -10,7 +10,23 @@
 #include "structs.h"
 #include "utils.h"
 
-void GameLogic(GameState* state) {}
+void GameLogic(GameState* state) {
+    if (state->controls & 1 << 0) {
+        if (state->paddle.rect.x + (state->paddle.rect.w / 2) > 0) {
+            state->paddle.rect.x -= PADDLE_SPEED;
+        } else {
+            state->paddle.rect.x = 0 - (state->paddle.rect.w / 2);
+        }
+    }
+
+    if (state->controls & 1 << 1) {
+        if (state->paddle.rect.x + (state->paddle.rect.w / 2) < GAME_WIDTH) {
+            state->paddle.rect.x += PADDLE_SPEED;
+        } else {
+            state->paddle.rect.x = GAME_WIDTH - (state->paddle.rect.w / 2);
+        }
+    }
+}
 
 void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     SDL_RenderCopy(renderer, assets->background, NULL, NULL);
@@ -114,6 +130,9 @@ int main(int argc, char* argv[]) {
                     }
 
                     break;
+
+                case SDL_MOUSEMOTION:
+                    state.paddle.rect.x = event.motion.x - (state.paddle.rect.w / 2); break;
 
                 case SDL_CONTROLLERDEVICEADDED:
                     if (controller == NULL) {
