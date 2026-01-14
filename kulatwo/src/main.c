@@ -35,14 +35,18 @@ void GameLogic(GameState* state) {
         state->ball.rect.y += BALL_SPEED * -sinf(state->ball.direction * (M_PI / 180.0f));
 
         if (state->ball.rect.x <= 0) {
+            state->ball.rect.x = 0;
             state->ball.direction = 180.0f - state->ball.direction;
         } else if (state->ball.rect.x + state->ball.rect.w >= GAME_WIDTH) {
+            state->ball.rect.x = GAME_WIDTH - state->ball.rect.w;
             state->ball.direction = 180.0f - state->ball.direction;
         }
 
         if (state->ball.rect.y <= 0) {
+            state->ball.rect.y = 0;
             state->ball.direction = 360.0f - state->ball.direction;
         } else if (state->ball.rect.y + state->ball.rect.h >= GAME_HEIGHT) {
+            state->ball.rect.y = GAME_HEIGHT - state->ball.rect.h;
             state->ball.direction = 360.0f - state->ball.direction;
         }
     } else {
