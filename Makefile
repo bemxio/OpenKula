@@ -1,8 +1,5 @@
 # constants
-PYTHON = python3
-
 GAME_TARGETS = kula kula3D kulatwo
-WINDOWS = 0
 
 # phony
 .PHONY: all $(GAME_TARGETS)
@@ -11,14 +8,10 @@ WINDOWS = 0
 all: $(GAME_TARGETS)
 
 $(GAME_TARGETS): %: %/assets
-	@if [ $(WINDOWS) -eq 1 ]; then \
-		$(MAKE) -C $@ -f Makefile.win $(filter-out $@,$(MAKECMDGOALS)); \
-	else \
-		$(MAKE) -C $@ $(filter-out $@,$(MAKECMDGOALS)); \
-	fi
+	$(MAKE) $(if $(WINDOWS),-C $@ -f Makefile.win,-C $@) $(filter-out $@,$(MAKECMDGOALS))
 
 %/assets:
-	$(PYTHON) tools/copy_assets_to_game.py $*
+	python tools/copy_assets_to_game.py $*
 
 # empty rule to avoid "No rule to make target" errors
 %:
