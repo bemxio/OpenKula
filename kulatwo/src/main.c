@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
