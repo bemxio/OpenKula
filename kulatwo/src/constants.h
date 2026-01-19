@@ -7,8 +7,8 @@
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
 
-#define BACKGROUND_PATH "assets/blue_sky.svg"
-#define BALL_PATH "assets/drakt1.svg"
+#define BACKGROUND_PATH "assets/blue_sky.png"
+#define BALL_PATH "assets/drakt1.png"
 #define FONT_PATH "assets/skrifttype.ttf"
 #define MUSIC_PATH "assets/mortietunes.mp3"
 

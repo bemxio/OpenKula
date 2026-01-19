@@ -8,13 +8,13 @@ To build one of the game targets, follow steps for your target platform below.
 Before building, ensure you have the following dependencies installed:
 - [GCC](https://gcc.gnu.org/) 9.x+ or [Clang](https://clang.llvm.org/) (GCC is used by default, Clang can be used by setting the `CC` environment variable)
 - [SDL2](https://www.libsdl.org/) with [SDL2_image](https://www.libsdl.org/projects/SDL_image/), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
-- [Python](https://www.python.org/) 3.6+
+- [Python](https://www.python.org/) 3.6+ with [CairoSVG](https://cairosvg.org/)
 - [Make](https://www.gnu.org/software/make/)
 - [Git](https://git-scm.com/)
 - (Optional) [MinGW-w64](https://www.mingw-w64.org/) for cross-compiling to Windows
 
-On Debian-based distributions, you can install everything you need with `apt install build-essential git libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev python3`.
-On Arch-based distros, use `pacman -S base-devel git sdl2 sdl2_image sdl2_mixer sdl2_ttf python`.
+On Debian-based distributions, you can install everything you need with `apt install build-essential git libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev python3 python3-cairosvg`.
+On Arch-based distros, use `pacman -S base-devel git sdl2 sdl2_image sdl2_mixer sdl2_ttf python python-cairosvg`.
 
 ### Assets
 For copyright reasons, you'll need to provide the game assets yourself by copying them from your legally obtained Kula Collection installation. The required files are located in the `<kula|kula3D|kulatwo>/resources/app/assets/` directory inside Kula Collection's root directory.

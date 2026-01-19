@@ -4,6 +4,8 @@ import os
 import shutil
 import xml.etree.ElementTree as ET
 
+from cairosvg import svg2png
+
 LOOKUP_TABLE = {
     "kula": {
         "aeaf1f511fa2bef67371ed62528686df.svg": "fiende01.png",
@@ -23,8 +25,8 @@ LOOKUP_TABLE = {
         "2dbac4b426800a196082eb5b7c3a7538.svg": "trekant2.png"
     },
     "kulatwo": {
-        "e7c147730f19d284bcd7b3f00af19bb6.svg": "blue_sky.svg",
-        "630ed973dafe41588dcb9fdc0d879116.svg": "drakt1.svg",
+        "e7c147730f19d284bcd7b3f00af19bb6.svg": "blue_sky.png",
+        "630ed973dafe41588dcb9fdc0d879116.svg": "drakt1.png",
         "077b5dbb78e1bc63ae11b483d3f5b20f.mp3": "mortietunes.mp3",
         "skrifttype.ttf": "skrifttype.ttf"
     }
@@ -53,7 +55,10 @@ def copy_assets_to_game(game: str, directory: str) -> None:
         #print(f"{source} -> {target}")
 
         if target.endswith(".png"):
-            extract_png_from_svg(f"assets/{source}", f"{game}/assets/{target}")
+            if game == "kulatwo":
+                svg2png(url=f"assets/{source}", write_to=f"{game}/assets/{target}")
+            else:
+                extract_png_from_svg(f"assets/{source}", f"{game}/assets/{target}")
         else:
             shutil.copy2(f"assets/{source}", f"{game}/assets/{target}")
 
