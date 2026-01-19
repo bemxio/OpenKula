@@ -105,8 +105,15 @@ int main(int argc, char* argv[]) {
 
     srand(time(NULL));
 
-    SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_RESIZABLE);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    #ifdef __wii__
+        SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+        SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        SDL_Texture* target = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
+    #else
+        SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_RESIZABLE);
+        SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    #endif
+
     SDL_GameController* controller = NULL;
     SDL_Event event;
 
@@ -146,7 +153,6 @@ int main(int argc, char* argv[]) {
 
         .controls = 0
     };
-
     GameAssets assets = {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
         .music = Mix_LoadMUS(MUSIC_PATH),
@@ -155,7 +161,12 @@ int main(int argc, char* argv[]) {
         .ball = IMG_LoadTexture(renderer, BALL_PATH)
     };
 
-    SDL_RenderSetLogicalSize(renderer, GAME_WIDTH, GAME_HEIGHT);
+    #ifdef __wii__
+        SDL_ShowCursor(SDL_DISABLE);
+    #else
+        SDL_RenderSetLogicalSize(renderer, GAME_WIDTH, GAME_HEIGHT);
+    #endif
+
     Mix_PlayMusic(assets.music, -1);
 
     while (loop) {
@@ -232,8 +243,17 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
+        #ifdef __wii__
+            SDL_SetRenderTarget(renderer, target);
+        #endif
+
         GameLogic(&state);
         GameRender(renderer, &state, &assets);
+
+        #ifdef __wii__
+            SDL_SetRenderTarget(renderer, NULL);
+            SDL_RenderCopy(renderer, target, NULL, NULL);
+        #endif
 
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
@@ -243,6 +263,10 @@ int main(int argc, char* argv[]) {
     Mix_FreeMusic(assets.music);
     TTF_CloseFont(assets.font);
     SDL_DestroyTexture(assets.ball);
+
+    #ifdef __wii__
+        SDL_DestroyTexture(target);
+    #endif
 
     if (controller != NULL) SDL_GameControllerClose(controller);
     SDL_DestroyRenderer(renderer);
