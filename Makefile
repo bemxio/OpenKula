@@ -8,7 +8,7 @@ GAME_TARGETS = kula kula3D kulatwo
 all: $(GAME_TARGETS)
 
 $(GAME_TARGETS): %: %/assets
-	$(MAKE) $(if $(WINDOWS),-C $@ -f Makefile.win,-C $@) $(filter-out $@,$(MAKECMDGOALS))
+	cmake -S $@ -B $@/build && cmake --build $@/build
 
 %/assets:
 	python tools/copy_assets_to_game.py $*
