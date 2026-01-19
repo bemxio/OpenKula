@@ -1,6 +1,6 @@
 # constants
 CC = gcc
-CFLAGS = -Wall -fms-extensions
+CFLAGS = -Wall -fms-extensions -O2
 LDLIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 SRC_DIR = src
