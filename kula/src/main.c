@@ -182,7 +182,9 @@ int main(int argc, char* argv[]) {
         .enemyClosed = IMG_LoadTexture(renderer, ENEMY_CLOSED_PATH)
     };
 
-    #ifndef __wii__
+    #ifdef __wii__
+        SDL_ShowCursor(SDL_DISABLE);
+    #else
         SDL_RenderSetLogicalSize(renderer, GAME_WIDTH, GAME_HEIGHT);
     #endif
 
