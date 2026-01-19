@@ -13,15 +13,19 @@ OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 ASSETS = $(wildcard $(ASSETS_DIR)/*)
 
 EXECUTABLE = kula
+ARCHIVE = kula-$(shell git rev-parse --short=7 HEAD)-linux-x64.tar.gz
 
 # phony
-.PHONY: all clean distclean run
+.PHONY: all dist clean distclean run
 
 # targets
 all: $(BUILD_DIR)/$(EXECUTABLE)
 
+dist: $(BUILD_DIR)/$(EXECUTABLE)
+	tar -czf $(ARCHIVE) -C $(BUILD_DIR) --exclude='*.o' .
+
 clean:
-	$(RM) -r $(BUILD_DIR)
+	$(RM) -r $(BUILD_DIR) *.tar.gz
 
 distclean: clean
 	$(RM) -r $(ASSETS_DIR)
