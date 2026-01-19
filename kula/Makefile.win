@@ -1,5 +1,5 @@
 # constants
-PREFIX = i686-w64-mingw32
+PREFIX = x86_64-w64-mingw32
 
 CC = $(PREFIX)-gcc
 CFLAGS = -std=c11 -Wall -fms-extensions
@@ -17,6 +17,7 @@ OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 ASSETS = $(wildcard $(ASSETS_DIR)/*)
 
 EXECUTABLE = kula.exe
+ARCHIVE = kula-$(shell git rev-parse --short=7 HEAD)-win-x64.zip
 
 # phony
 .PHONY: all dist clean distclean run
@@ -29,14 +30,12 @@ dist: $(BUILD_DIR)/$(EXECUTABLE)
 		/usr/$(PREFIX)/bin/libwebp.dll \
 		/usr/$(PREFIX)/bin/libwebpdemux.dll \
 		/usr/$(PREFIX)/bin/libsharpyuv.dll \
-		/usr/$(PREFIX)/bin/libgcc_s_dw2-1.dll \
-		/usr/$(PREFIX)/bin/libwinpthread-1.dll \
 		/usr/$(PREFIX)/bin/libssp-0.dll $(BUILD_DIR)/
 
-	cd $(BUILD_DIR) && zip -q -r ../$(basename $(EXECUTABLE)).zip . -x *.o
+	cd $(BUILD_DIR) && zip -q -r ../$(ARCHIVE) . -x *.o
 
 clean:
-	$(RM) -r $(BUILD_DIR) $(basename $(EXECUTABLE)).zip
+	$(RM) -r $(BUILD_DIR) *.zip
 
 distclean: clean
 	$(RM) -r $(ASSETS_DIR)
