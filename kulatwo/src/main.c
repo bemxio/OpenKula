@@ -224,6 +224,8 @@ int main(int argc, char* argv[]) {
                             state.controls |= 1 << 0; break;
                         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
                             state.controls |= 1 << 1; break;
+                        case SDL_CONTROLLER_BUTTON_BACK:
+                            loop = false; break;
                     }
 
                     break;
