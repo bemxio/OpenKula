@@ -8,23 +8,23 @@ BUILD_DIR = build
 WIISDSYNC_DIR = ~/.local/share/dolphin-emu/Load/WiiSDSync
 
 # phony
-.PHONY: all clean distclean wiisdsync $(GAME_TARGETS)
+.PHONY: all clean copy_dolphin $(GAME_TARGETS)
 
 # targets
 all: $(GAME_TARGETS)
+
+copy_dolphin: $(GAME_TARGETS)
+	$(RM) -r $(WIISDSYNC_DIR)/apps/*
+
+	for game in $(GAME_TARGETS); do \
+		cp -r $(BUILD_DIR)/$$game/apps/$$game $(WIISDSYNC_DIR)/apps; \
+	done
 
 clean:
 	$(RM) -r $(BUILD_DIR)
 
 distclean: clean
 	$(RM) -r $(GAME_TARGETS:%=%/assets)
-
-wiisdsync: $(GAME_TARGETS)
-	$(RM) -r $(WIISDSYNC_DIR)/apps/*
-
-	for game in $(GAME_TARGETS); do \
-		cp -r $(BUILD_DIR)/$$game/apps/$$game $(WIISDSYNC_DIR)/apps; \
-	done
 
 # rules
 $(GAME_TARGETS): %: %/assets
