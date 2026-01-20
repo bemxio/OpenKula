@@ -283,7 +283,7 @@ int main(int argc, char* argv[]) {
                             }
 
                             break;
-                        case SDL_CONTROLLER_BUTTON_GUIDE:
+                        case SDL_CONTROLLER_BUTTON_BACK:
                             loop = false; break;
                     }
 
