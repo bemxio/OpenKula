@@ -36,6 +36,11 @@
 #define GAME_OVER_COLOR {255, 0, 0}
 #define GAME_OVER_SPACING 25
 #define GAME_OVER_SUBCAPTION_SIZE 32
+
+#ifdef __wii__
+#define GAME_OVER_SUBCAPTION_TEXT "Press the + button to restart"
+#else
 #define GAME_OVER_SUBCAPTION_TEXT "Press the Enter key to restart"
+#endif
 
 #endif
