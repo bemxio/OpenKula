@@ -15,7 +15,7 @@ distclean: clean
 
 # rules
 $(GAME_TARGETS): %: %/assets
-	cmake -S $@ -B $@/build && cmake --build $@/build
+	cmake -S $@ -B $@/build -DCMAKE_BUILD_TYPE=Release && cmake --build $@/build
 
 %/assets:
 	python tools/copy_assets_to_game.py $*
