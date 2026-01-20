@@ -4,6 +4,6 @@
 	<version>${PROJECT_VERSION}</version>
 	<release_date></release_date>
 	<coder>OpenKula</coder>
-	<short_description>Kula 2 from the Kula Collection on the Wii!</short_description>
-	<long_description>Beat your own record and help Kula to jump away from the evil triangles in this easy and fun game for kids.</long_description>
+	<short_description>Kula 2 on the Nintendo Wii™!</short_description>
+	<long_description></long_description>
 </app>
