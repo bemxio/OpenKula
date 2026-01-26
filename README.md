@@ -37,7 +37,7 @@ make <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired tar
 make WINDOWS=1 <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired target
 ```
 
-This will produce an executable file in the `build/` directory of the chosen game. You can also run `make <kula|kula3D|kulatwo> run` to immediately launch the game after building, or `make` to build all three targets at once.
+This will produce an executable file together with the assets inside the `build/<kula|kula3D|kulatwo>` directory. You can also run `make <kula|kula3D|kulatwo> run` to immediately launch the game after building, or `make` to build all three targets at once.
 
 In case of cross-compiling for Windows, you can also bundle the required DLLs and package everything into a ZIP file with `make WINDOWS=1 <kula|kula3D|kulatwo> dist`.
 
