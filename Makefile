@@ -1,17 +1,23 @@
 # constants
-GAME_TARGETS = kula kula3D kulatwo
-
 CMAKE = cmake
 PYTHON = python3
+
+GAME_TARGETS = kula kula3D kulatwo
 
 BUILD_DIR = build
 WIISDSYNC_DIR = ~/.local/share/dolphin-emu/Load/WiiSDSync
 
 # phony
-.PHONY: all clean copy_dolphin $(GAME_TARGETS)
+.PHONY: all clean distclean copy_dolphin $(GAME_TARGETS)
 
 # targets
 all: $(GAME_TARGETS)
+
+clean:
+	$(RM) -r $(BUILD_DIR)
+
+distclean: clean
+	$(RM) -r $(GAME_TARGETS:%=%/assets)
 
 copy_dolphin: $(GAME_TARGETS)
 	$(RM) -r $(WIISDSYNC_DIR)/apps/*
@@ -19,12 +25,6 @@ copy_dolphin: $(GAME_TARGETS)
 	for game in $(GAME_TARGETS); do \
 		cp -r $(BUILD_DIR)/$$game/apps/$$game $(WIISDSYNC_DIR)/apps; \
 	done
-
-clean:
-	$(RM) -r $(BUILD_DIR)
-
-distclean: clean
-	$(RM) -r $(GAME_TARGETS:%=%/assets)
 
 # rules
 $(GAME_TARGETS): %: %/assets
