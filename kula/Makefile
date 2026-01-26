@@ -1,45 +1,31 @@
 # constants
-CC = gcc
-CFLAGS = -Wall -fms-extensions -O2
-LDLIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+EE_CFLAGS = -I$(PS2SDK)/ports/include -I$(PS2DEV)/gsKit/include -Wall -fms-extensions
+EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2DEV)/gsKit/lib
+
+#EE_LIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+EE_LIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm -lpatches -lgskit -ldmakit -lps2_drivers -lmodplug -lxmp -lfreetype -lstdc++ -lz -lpng
 
 SRC_DIR = src
 ASSETS_DIR = assets
-BUILD_DIR = ../build/kula
 
-SOURCES = $(wildcard $(SRC_DIR)/*.c)
-HEADERS = $(wildcard $(SRC_DIR)/*.h)
-OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
-ASSETS = $(wildcard $(ASSETS_DIR)/*)
-
-EXECUTABLE = kula
-ARCHIVE = kula-$(shell git rev-parse --short=7 HEAD)-linux-x64.tar.gz
+EE_OBJS = $(patsubst %.c,%.o,$(wildcard $(SRC_DIR)/*.c))
+EE_BIN = kula.elf
 
 # phony
-.PHONY: all dist clean distclean run
+.PHONY: all clean distclean run
 
 # targets
-all: $(BUILD_DIR)/$(EXECUTABLE)
-
-dist: $(BUILD_DIR)/$(EXECUTABLE)
-	tar -czf $(ARCHIVE) -C $(BUILD_DIR) --exclude='*.o' .
+all: $(EE_BIN)
 
 clean:
-	$(RM) -r $(BUILD_DIR) *.tar.gz
+	$(RM) -r $(EE_OBJS) $(EE_BIN)
 
 distclean: clean
 	$(RM) -r $(ASSETS_DIR)
 
-run: $(BUILD_DIR)/$(EXECUTABLE)
-	./$<
+run: $(EE_BIN)
+	ps2client execee host:$<
 
-# rules
-$(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS) | $(ASSETS) $(BUILD_DIR)
-	cp -r $(ASSETS_DIR) $(BUILD_DIR)
-	$(CC) $(CFLAGS) $^ $(LDLIBS) -o $@
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(HEADERS) $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD_DIR):
-	mkdir -p $@
+# includes
+include $(PS2SDK)/samples/Makefile.pref
+include $(PS2SDK)/samples/Makefile.eeglobal

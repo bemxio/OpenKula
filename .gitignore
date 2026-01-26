@@ -17,6 +17,7 @@ build/
 # Executables
 *.exe
 *.out
+*.elf
 
 # Archive files
 *.tar.gz
