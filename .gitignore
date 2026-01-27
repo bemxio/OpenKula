@@ -19,6 +19,9 @@ build/
 *.out
 *.elf
 
+# Image files
+*.iso
+
 # Archive files
 *.tar.gz
 *.zip
