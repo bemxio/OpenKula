@@ -7,7 +7,7 @@ SRC_DIR = src
 ASSETS_DIR = assets
 
 EE_OBJS = $(patsubst %.c,%.o,$(wildcard $(SRC_DIR)/*.c))
-EE_BIN = kula.elf
+EE_BIN = KULA_000.01
 EE_ISO = kula.iso
 
 # phony
@@ -23,11 +23,11 @@ distclean: clean
 	$(RM) -r $(ASSETS_DIR)
 
 run: $(EE_ISO)
-	ps2client execee host:$<
+	pcsx2 $(EE_ISO)
 
 # rules
 $(EE_ISO): $(EE_BIN)
-	mkisofs -udf -full-iso9660-filenames -o $(EE_ISO) $(EE_BIN) $(ASSETS_DIR)
+	mkisofs -o $(EE_ISO) system.cnf $(EE_BIN) $(ASSETS_DIR)
 
 # includes
 include $(PS2SDK)/samples/Makefile.pref

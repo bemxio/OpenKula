@@ -15,9 +15,8 @@ kula*/**/*.ttf
 build/
 
 # Executables
-*.exe
-*.out
 *.elf
+*.[0-9][0-9]
 
 # Image files
 *.iso
