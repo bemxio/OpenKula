@@ -7,12 +7,21 @@
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
 
-#define BACKGROUND_PATH "assets/kulabakgrunn.png"
-#define BGM_PATH "assets/mortietunes.mp3"
-#define ENEMY_CLOSED_PATH "assets/fiende02.png"
-#define ENEMY_OPEN_PATH "assets/fiende01.png"
-#define FONT_PATH "assets/skrifttype.ttf"
-#define PLAYER_PATH "assets/kula.png"
+#ifdef __PS2__
+    #define BACKGROUND_PATH "cdrom0:/kulabakgrunn.png"
+    #define BGM_PATH "cdrom0:/mortietunes.mp3"
+    #define ENEMY_CLOSED_PATH "cdrom0:/fiende02.png"
+    #define ENEMY_OPEN_PATH "cdrom0:/fiende01.png"
+    #define FONT_PATH "cdrom0:/skrifttype.ttf"
+    #define PLAYER_PATH "cdrom0:/kula.png"
+#else
+    #define BACKGROUND_PATH "assets/kulabakgrunn.png"
+    #define BGM_PATH "assets/mortietunes.mp3"
+    #define ENEMY_CLOSED_PATH "assets/fiende02.png"
+    #define ENEMY_OPEN_PATH "assets/fiende01.png"
+    #define FONT_PATH "assets/skrifttype.ttf"
+    #define PLAYER_PATH "assets/kula.png"
+#endif
 
 #define ENEMY_ANIMATION_DELAY 10
 #define ENEMY_GLIDE_DURATION 2000
