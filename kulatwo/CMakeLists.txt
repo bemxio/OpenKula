@@ -9,6 +9,13 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 project(kulatwo)
+execute_process(COMMAND git rev-parse --short HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE PROJECT_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_QUIET
+)
+
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 find_package(SDL2 REQUIRED PATHS "${VITASDK}/arm-vita-eabi/lib/cmake")
@@ -27,11 +34,12 @@ target_link_libraries(${PROJECT_NAME}
   freetype
   jpeg png webp webpdemux
   FLAC mikmod modplug mpg123 opusfile opus vorbisfile vorbis ogg xmp-lite
-  z bz2 stdc++ pthread m
+  z bz2 stdc++ pthread
+  m
 )
 
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
-vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
+vita_create_vpk(${PROJECT_NAME}-${PROJECT_VERSION}-vita.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   NAME ${VITA_APP_NAME}
   FILE ${CMAKE_SOURCE_DIR}/assets assets
 )
