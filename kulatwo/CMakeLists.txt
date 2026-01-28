@@ -38,8 +38,17 @@ target_link_libraries(${PROJECT_NAME}
   m
 )
 
+add_custom_target(sce_sys ALL
+  COMMAND magick ${CMAKE_SOURCE_DIR}/assets/drakt1.png -resize 128x128\! PNG:- | pngquant - > ${CMAKE_CURRENT_BINARY_DIR}/icon0.png
+  COMMAND magick ${CMAKE_SOURCE_DIR}/assets/blue_sky.png -resize 840x500\! PNG:- | pngquant - > ${CMAKE_CURRENT_BINARY_DIR}/bg.png
+)
+
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
 vita_create_vpk(${PROJECT_NAME}-${PROJECT_VERSION}-vita.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   NAME ${VITA_APP_NAME}
   FILE ${CMAKE_SOURCE_DIR}/assets assets
+  FILE ${CMAKE_SOURCE_DIR}/template.xml sce_sys/livearea/contents/template.xml
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/bg.png sce_sys/livearea/contents/bg.png
+# FILE ${CMAKE_CURRENT_BINARY_DIR}/startup.png sce_sys/livearea/contents/startup.png
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/icon0.png sce_sys/icon0.png
 )
