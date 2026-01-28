@@ -106,18 +106,34 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     #ifdef __wii__
-        SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+        SDL_Window* window = SDL_CreateWindow(
+            WINDOW_TITLE,
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            640, 480,
+            SDL_WINDOW_SHOWN
+        );
         SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         SDL_Texture* target = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
+    #elif __vita__
+        SDL_Window* window = SDL_CreateWindow(
+            WINDOW_TITLE,
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            960, 544,
+            SDL_WINDOW_SHOWN
+        );
+        SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);    
     #else
-        SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_RESIZABLE);
+        SDL_Window* window = SDL_CreateWindow(
+            WINDOW_TITLE,
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            GAME_WIDTH, GAME_HEIGHT, 
+            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+        );
         SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     #endif
 
     SDL_GameController* controller = NULL;
     SDL_Event event;
-
-    bool loop = true;
 
     GameState state = {
         .score = 0,
@@ -161,10 +177,19 @@ int main(int argc, char* argv[]) {
         .ball = IMG_LoadTexture(renderer, BALL_PATH)
     };
 
+    bool loop = true;
+
+    int32_t screenWidth;
+    int32_t screenHeight;
+
+    SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+    SDL_RenderSetScale(renderer,
+        (float)screenWidth / GAME_WIDTH,
+        (float)screenHeight / GAME_HEIGHT
+    );
+
     #ifdef __wii__
         SDL_ShowCursor(SDL_DISABLE);
-    #else
-        SDL_RenderSetLogicalSize(renderer, GAME_WIDTH, GAME_HEIGHT);
     #endif
 
     Mix_PlayMusic(assets.music, -1);
@@ -174,6 +199,19 @@ int main(int argc, char* argv[]) {
             switch (event.type) {
                 case SDL_QUIT:
                     loop = false; break;
+
+                case SDL_WINDOWEVENT:
+                    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                        screenWidth = event.window.data1;
+                        screenHeight = event.window.data2;
+
+                        SDL_RenderSetScale(renderer,
+                            (float)screenWidth / GAME_WIDTH,
+                            (float)screenHeight / GAME_HEIGHT
+                        );
+                    }
+
+                    break;
 
                 case SDL_KEYDOWN:
                     if (event.key.repeat) break;
@@ -202,7 +240,7 @@ int main(int argc, char* argv[]) {
                     break;
 
                 case SDL_MOUSEMOTION:
-                    state.paddle.rect.x = event.motion.x - (state.paddle.rect.w / 2); break;
+                    state.paddle.rect.x = (event.motion.x / (float)screenWidth * GAME_WIDTH) - (state.paddle.rect.w / 2); break;
 
                 case SDL_CONTROLLERDEVICEADDED:
                     if (controller == NULL) {
