@@ -16,8 +16,6 @@ execute_process(COMMAND git rev-parse --short HEAD
   ERROR_QUIET
 )
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/meta.xml ${CMAKE_CURRENT_BINARY_DIR}/meta.xml)
-
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
@@ -25,23 +23,23 @@ find_package(SDL2_ttf REQUIRED)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fms-extensions -O2")
 
-add_executable(${PROJECT_NAME}
-  src/main.c src/utils.c
-)
+add_executable(${PROJECT_NAME} src/main.c src/utils.c)
 target_link_libraries(${PROJECT_NAME}
   SDL2_image SDL2_mixer SDL2_ttf
   SDL2::SDL2 SDL2main
   freetype harfbuzz
   png
   modplug opusfile opus ogg
-  z bz2
-  stdc++
+  z bz2 stdc++
+  m
 )
 
 ogc_create_dol(${PROJECT_NAME})
 
 set(DIST_DIRECTORY apps/${PROJECT_NAME})
 set(DIST_ARCHIVE ${PROJECT_NAME}-${PROJECT_VERSION}-wii.zip)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/meta.xml ${CMAKE_CURRENT_BINARY_DIR}/meta.xml)
 
 add_custom_target(dist ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIRECTORY}
