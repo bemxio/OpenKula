@@ -105,19 +105,21 @@ int main(int argc, char* argv[]) {
 
     srand(time(NULL));
 
-    #ifdef __wii__
-        SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
-        SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        SDL_Texture* target = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
-    #else
-        SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_RESIZABLE);
-        SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    #endif
-
+    SDL_Window* window = SDL_CreateWindow(
+        WINDOW_TITLE,
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        #if defined(__wii__)
+            640, 480,
+        #elif defined(__vita__)
+            960, 544,
+        #else
+            GAME_WIDTH, GAME_HEIGHT,
+        #endif
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+    );
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_GameController* controller = NULL;
     SDL_Event event;
-
-    bool loop = true;
 
     GameState state = {
         .score = 0,
@@ -161,10 +163,19 @@ int main(int argc, char* argv[]) {
         .ball = IMG_LoadTexture(renderer, BALL_PATH)
     };
 
-    #ifdef __wii__
+    bool loop = true;
+
+    int32_t screenWidth;
+    int32_t screenHeight;
+
+    SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+    SDL_RenderSetScale(renderer,
+        (float)screenWidth / GAME_WIDTH,
+        (float)screenHeight / GAME_HEIGHT
+    );
+
+    #if defined(__wii__)
         SDL_ShowCursor(SDL_DISABLE);
-    #else
-        SDL_RenderSetLogicalSize(renderer, GAME_WIDTH, GAME_HEIGHT);
     #endif
 
     Mix_PlayMusic(assets.music, -1);
@@ -174,6 +185,19 @@ int main(int argc, char* argv[]) {
             switch (event.type) {
                 case SDL_QUIT:
                     loop = false; break;
+
+                case SDL_WINDOWEVENT:
+                    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                        screenWidth = event.window.data1;
+                        screenHeight = event.window.data2;
+
+                        SDL_RenderSetScale(renderer,
+                            (float)screenWidth / GAME_WIDTH,
+                            (float)screenHeight / GAME_HEIGHT
+                        );
+                    }
+
+                    break;
 
                 case SDL_KEYDOWN:
                     if (event.key.repeat) break;
@@ -202,7 +226,7 @@ int main(int argc, char* argv[]) {
                     break;
 
                 case SDL_MOUSEMOTION:
-                    state.paddle.rect.x = event.motion.x - (state.paddle.rect.w / 2); break;
+                    state.paddle.rect.x = (event.motion.x / (float)screenWidth * GAME_WIDTH) - (state.paddle.rect.w / 2); break;
 
                 case SDL_CONTROLLERDEVICEADDED:
                     if (controller == NULL) {
@@ -242,20 +266,10 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-
-        #ifdef __wii__
-            SDL_SetRenderTarget(renderer, target);
-        #endif
 
         GameLogic(&state);
         GameRender(renderer, &state, &assets);
-
-        #ifdef __wii__
-            SDL_SetRenderTarget(renderer, NULL);
-            SDL_RenderCopy(renderer, target, NULL, NULL);
-        #endif
 
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
@@ -265,10 +279,6 @@ int main(int argc, char* argv[]) {
     Mix_FreeMusic(assets.music);
     TTF_CloseFont(assets.font);
     SDL_DestroyTexture(assets.ball);
-
-    #ifdef __wii__
-        SDL_DestroyTexture(target);
-    #endif
 
     if (controller != NULL) SDL_GameControllerClose(controller);
     SDL_DestroyRenderer(renderer);
