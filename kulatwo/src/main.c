@@ -120,8 +120,6 @@ int main(int argc, char* argv[]) {
     SDL_GameController* controller = NULL;
     SDL_Event event;
 
-    bool loop = true;
-
     GameState state = {
         .score = 0,
 
@@ -163,6 +161,14 @@ int main(int argc, char* argv[]) {
 
         .ball = IMG_LoadTexture(renderer, BALL_PATH)
     };
+
+    bool loop = true;
+
+    int32_t screenWidth;
+    int32_t screenHeight;
+
+    SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+    SDL_RenderSetScale(renderer, (float)screenWidth / GAME_WIDTH, (float)screenHeight / GAME_HEIGHT);
 
     #ifdef __wii__
         SDL_ShowCursor(SDL_DISABLE);

@@ -133,8 +133,6 @@ int main(int argc, char* argv[]) {
     SDL_GameController* controller = NULL;
     SDL_Event event;
 
-    bool loop = true;
-
     GameState state = {
         .score = 0,
         .scoreTimer = 0,
@@ -184,6 +182,14 @@ int main(int argc, char* argv[]) {
         .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),
         .enemyClosed = IMG_LoadTexture(renderer, ENEMY_CLOSED_PATH)
     };
+
+    bool loop = true;
+
+    int32_t screenWidth;
+    int32_t screenHeight;
+
+    SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+    SDL_RenderSetScale(renderer, (float)screenWidth / GAME_WIDTH, (float)screenHeight / GAME_HEIGHT);
 
     #ifdef __wii__
         SDL_ShowCursor(SDL_DISABLE);
