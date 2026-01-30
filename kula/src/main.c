@@ -1,4 +1,6 @@
 #if defined(NXDK)
+    #include <hal/video.h>
+
     #include <SDL.h>
     #include <SDL_image.h>
     #include <SDL_ttf.h>
@@ -119,6 +121,10 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
 }
 
 int main(int argc, char* argv[]) {
+    #if defined(NXDK)
+        XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
+    #endif
+
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
@@ -127,7 +133,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* window = SDL_CreateWindow(
         WINDOW_TITLE,
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        #if defined(__wii__)
+        #if defined(__wii__) || defined(NXDK)
             640, 480,
         #elif defined(__vita__)
             960, 544,
