@@ -1,7 +1,17 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+#if defined(NXDK)
+    #include <hal/video.h>
+
+    #include <SDL.h>
+    #include <SDL_image.h>
+    #include <SDL_ttf.h>
+
+    #include "audio.h"
+#else
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_image.h>
+    #include <SDL2/SDL_mixer.h>
+    #include <SDL2/SDL_ttf.h>
+#endif
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -155,6 +165,10 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
 }
 
 int main(int argc, char* argv[]) {
+    #if defined(NXDK)
+        XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
+    #endif
+
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
@@ -163,7 +177,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* window = SDL_CreateWindow(
         WINDOW_TITLE,
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        #if defined(__wii__)
+        #if defined(__wii__) || defined(NXDK)
             640, 480,
         #elif defined(__vita__)
             960, 544,
@@ -200,7 +214,7 @@ int main(int argc, char* argv[]) {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
         .logo = IMG_LoadTexture(renderer, LOGO_PATH),
         .music = Mix_LoadMUS(BGM_PATH),
-        .font = TTF_OpenFont(FONT_PATH, 0),
+        .font = TTF_OpenFont(FONT_PATH, FONT_INITIAL_SIZE),
 
         .player = IMG_LoadTexture(renderer, PLAYER_PATH),
         .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),

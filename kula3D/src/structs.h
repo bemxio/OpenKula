@@ -1,9 +1,16 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+#if defined(NXDK)
+    #include <SDL.h>
+    #include <SDL_ttf.h>
+
+    #include "audio.h"
+#else
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_mixer.h>
+    #include <SDL2/SDL_ttf.h>
+#endif
 
 #include <stdbool.h>
 #include <stdint.h>
