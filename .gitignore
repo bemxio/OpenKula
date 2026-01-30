@@ -1,5 +1,7 @@
 # Object files
 *.o
+*.d
+*.obj
 
 # Assets
 *.svg
@@ -17,6 +19,12 @@ build/
 # Executables
 *.exe
 *.out
+
+# Libraries
+*.lib
+
+# Image files
+*.iso
 
 # Archive files
 *.tar.gz
