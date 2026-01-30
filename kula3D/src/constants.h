@@ -25,6 +25,8 @@
     #define PLAYER_PATH "assets/kula.png"
 #endif
 
+#define FONT_INITIAL_SIZE 64
+
 #define PLAYER_INITIAL_RECT {23, 284, 44, 46}
 #define PLAYER_SPEED 10
 
@@ -49,7 +51,7 @@
 
 #if defined(__wii__)
     #define GAME_OVER_SUBCAPTION_TEXT "Press the + button to restart"
-#elif defined(__vita__)
+#elif defined(__vita__) || defined(NXDK)
     #define GAME_OVER_SUBCAPTION_TEXT "Press the Start button to restart"
 #else
     #define GAME_OVER_SUBCAPTION_TEXT "Press the Enter key to restart"
