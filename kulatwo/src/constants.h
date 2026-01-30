@@ -7,10 +7,17 @@
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
 
-#define BACKGROUND_PATH "assets/blue_sky.png"
-#define BALL_PATH "assets/drakt1.png"
-#define FONT_PATH "assets/skrifttype.ttf"
-#define MUSIC_PATH "assets/mortietunes.mp3"
+#if defined(NXDK)
+    #define BACKGROUND_PATH "D:\\assets\\blue_sky.png"
+    #define BALL_PATH "D:\\assets\\drakt1.png"
+    #define FONT_PATH "D:\\assets\\skrifttype.ttf"
+    #define MUSIC_PATH "D:\\assets\\mortietunes.mp3"
+#else
+    #define BACKGROUND_PATH "assets/blue_sky.png"
+    #define BALL_PATH "assets/drakt1.png"
+    #define FONT_PATH "assets/skrifttype.ttf"
+    #define MUSIC_PATH "assets/mortietunes.mp3"
+#endif
 
 #define PADDLE_COLOR 255, 230, 0, 255
 #define PADDLE_INITIAL_RECT {4, 324, 89, 15}

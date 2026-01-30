@@ -7,13 +7,23 @@
 #define GAME_WIDTH 480
 #define GAME_HEIGHT 360
 
-#define BACKGROUND_PATH "assets/background.png"
-#define BGM_PATH "assets/mortietunes.mp3"
-#define ENEMY_CLOSED_PATH "assets/trekant2.png"
-#define ENEMY_OPEN_PATH "assets/trekant.png"
-#define FONT_PATH "assets/skrifttype.ttf"
-#define LOGO_PATH "assets/logo.png"
-#define PLAYER_PATH "assets/kula.png"
+#if defined(NXDK)
+    #define BACKGROUND_PATH "D:\\assets\\background.png"
+    #define BGM_PATH "D:\\assets\\mortietunes.mp3"
+    #define ENEMY_CLOSED_PATH "D:\\assets\\trekant2.png"
+    #define ENEMY_OPEN_PATH "D:\\assets\\trekant.png"
+    #define FONT_PATH "D:\\assets\\skrifttype.ttf"
+    #define LOGO_PATH "D:\\assets\\logo.png"
+    #define PLAYER_PATH "D:\\assets\\kula.png"
+#else
+    #define BACKGROUND_PATH "assets/background.png"
+    #define BGM_PATH "assets/mortietunes.mp3"
+    #define ENEMY_CLOSED_PATH "assets/trekant2.png"
+    #define ENEMY_OPEN_PATH "assets/trekant.png"
+    #define FONT_PATH "assets/skrifttype.ttf"
+    #define LOGO_PATH "assets/logo.png"
+    #define PLAYER_PATH "assets/kula.png"
+#endif
 
 #define PLAYER_INITIAL_RECT {23, 284, 44, 46}
 #define PLAYER_SPEED 10
