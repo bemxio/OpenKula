@@ -1,8 +1,13 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#if defined(NXDK)
+    #include <SDL.h>
+    #include <SDL_ttf.h>
+#else
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_ttf.h>
+#endif
 
 #include <stdbool.h>
 #include <stdint.h>
