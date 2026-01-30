@@ -9,6 +9,10 @@ void Mix_OpenAudio(int, unsigned short, int, int);
 void* Mix_LoadMUS(const char*);
 void Mix_PlayMusic(void*, int);
 
+void Mix_SetMusicPosition(double);
+void Mix_ResumeMusic(void);
+void Mix_PauseMusic(void);
+
 void Mix_FreeMusic(void*);
 void Mix_CloseAudio(void);
 void Mix_Quit(void);
