@@ -108,6 +108,10 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
 }
 
 int main(int argc, char* argv[]) {
+    #if defined(NXDK)
+        XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
+    #endif
+
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
     IMG_Init(0);
     TTF_Init();
