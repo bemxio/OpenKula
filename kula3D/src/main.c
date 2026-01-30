@@ -177,7 +177,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* window = SDL_CreateWindow(
         WINDOW_TITLE,
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        #if defined(__wii__)
+        #if defined(__wii__) || defined(NXDK)
             640, 480,
         #elif defined(__vita__)
             960, 544,
