@@ -1,45 +1,24 @@
 # constants
-CC = gcc
-CFLAGS = -Wall -fms-extensions -O2
-LDLIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-
 SRC_DIR = src
 ASSETS_DIR = assets
-BUILD_DIR = ../build/kula
+OUTPUT_DIR = ../build/kula
 
-SOURCES = $(wildcard $(SRC_DIR)/*.c)
-HEADERS = $(wildcard $(SRC_DIR)/*.h)
-OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
-ASSETS = $(wildcard $(ASSETS_DIR)/*)
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+ASSETS = $(patsubst $(ASSETS_DIR)/%,$(OUTPUT_DIR)/assets/%,$(wildcard $(ASSETS_DIR)/*))
 
-EXECUTABLE = kula
-ARCHIVE = kula-$(shell git rev-parse --short=7 HEAD)-linux-x64.tar.gz
+NXDK_DIR = ../nxdk
+NXDK_SDL = y
 
-# phony
-.PHONY: all dist clean distclean run
+XBE_TITLE = Kula
+GEN_XISO = kula-$(shell git rev-parse --short=7 HEAD)-xbox.iso
 
 # targets
-all: $(BUILD_DIR)/$(EXECUTABLE)
+$(GEN_XISO): $(ASSETS)
 
-dist: $(BUILD_DIR)/$(EXECUTABLE)
-	tar -czf $(ARCHIVE) -C $(BUILD_DIR) --exclude='*.o' .
+$(OUTPUT_DIR)/assets/%: $(ASSETS_DIR)/%
+	$(VE)cp $< $@
 
-clean:
-	$(RM) -r $(BUILD_DIR) *.tar.gz
+TARGET += $(ASSETS)
 
-distclean: clean
-	$(RM) -r $(ASSETS_DIR)
-
-run: $(BUILD_DIR)/$(EXECUTABLE)
-	./$<
-
-# rules
-$(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS) | $(ASSETS) $(BUILD_DIR)
-	cp -r $(ASSETS_DIR) $(BUILD_DIR)
-	$(CC) $(CFLAGS) $^ $(LDLIBS) -o $@
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(HEADERS) $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD_DIR):
-	mkdir -p $@
+# includes
+include $(NXDK_DIR)/Makefile
