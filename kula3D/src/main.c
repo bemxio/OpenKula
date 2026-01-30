@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
         .logo = IMG_LoadTexture(renderer, LOGO_PATH),
         .music = Mix_LoadMUS(BGM_PATH),
-        .font = TTF_OpenFont(FONT_PATH, 0),
+        .font = TTF_OpenFont(FONT_PATH, FONT_INITIAL_SIZE),
 
         .player = IMG_LoadTexture(renderer, PLAYER_PATH),
         .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),
