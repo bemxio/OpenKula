@@ -1,6 +1,6 @@
 #include "utils.h"
 
-void StartGlide(Entity* entity, int32_t targetX, int32_t targetY, uint32_t duration) {
+void StartGlide(Entity* entity, Sint32 targetX, Sint32 targetY, Uint32 duration) {
     entity->glideState.active = true;
 
     entity->glideState.startX = entity->rect.x;
@@ -14,8 +14,8 @@ void StartGlide(Entity* entity, int32_t targetX, int32_t targetY, uint32_t durat
 }
 
 void UpdateGlide(Entity* entity) {
-    uint32_t currentTime = SDL_GetTicks();
-    uint32_t elapsedTime = currentTime - entity->glideState.startTime;
+    Uint32 currentTime = SDL_GetTicks();
+    Uint32 elapsedTime = currentTime - entity->glideState.startTime;
 
     if (elapsedTime >= entity->glideState.duration) {
         entity->rect.x = entity->glideState.targetX;
@@ -25,8 +25,8 @@ void UpdateGlide(Entity* entity) {
     } else {
         float t = (float)elapsedTime / (float)entity->glideState.duration;
 
-        entity->rect.x = (int32_t)(entity->glideState.startX + (entity->glideState.targetX - entity->glideState.startX) * t);
-        entity->rect.y = (int32_t)(entity->glideState.startY + (entity->glideState.targetY - entity->glideState.startY) * t);
+        entity->rect.x = (Sint32)(entity->glideState.startX + (entity->glideState.targetX - entity->glideState.startX) * t);
+        entity->rect.y = (Sint32)(entity->glideState.startY + (entity->glideState.targetY - entity->glideState.startY) * t);
     }
 }
 
@@ -40,7 +40,7 @@ void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Re
     SDL_DestroyTexture(texture);
 }
 
-void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
+void RenderScore(SDL_Renderer* renderer, TTF_Font* font, Sint32 score) {
     SDL_Rect rect = SCORE_RECT;
     char buffer[18];
 

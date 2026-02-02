@@ -13,7 +13,6 @@
 #endif
 
 #include <stdbool.h>
-#include <stdint.h>
 
 #include "constants.h"
 
@@ -27,14 +26,14 @@ struct Player {
     struct Entity;
 
     bool jumpCycle;
-    uint8_t jumpTimer;
+    Uint8 jumpTimer;
 };
 
 struct Enemy {
     struct Entity;
 
-    uint32_t ghostTimer;
-    uint32_t cloneTimer;
+    Uint32 ghostTimer;
+    Uint32 cloneTimer;
 };
 
 typedef struct Entity Entity;
@@ -53,13 +52,13 @@ struct GameAssets {
 };
 
 struct GameState {
-    uint32_t score;
+    Uint32 score;
 
     Player player;
     Enemy enemy;
     Enemy enemyClones[ENEMY_CLONE_AMOUNT];
 
-    uint8_t controls;
+    Uint8 controls;
 };
 
 typedef struct GameAssets GameAssets;

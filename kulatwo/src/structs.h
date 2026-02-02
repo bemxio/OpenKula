@@ -13,16 +13,15 @@
 #endif
 
 #include <stdbool.h>
-#include <stdint.h>
 
 struct GlideState {
     bool active;
 
-    int32_t startX, startY;
-    int32_t targetX, targetY;
+    Sint32 startX, startY;
+    Sint32 targetX, targetY;
 
-    uint32_t startTime;
-    uint32_t duration;
+    Uint32 startTime;
+    Uint32 duration;
 };
 
 typedef struct GlideState GlideState;
@@ -40,8 +39,8 @@ struct Paddle {
 struct Ball {
     struct Entity;
 
-    int16_t direction;
-    uint32_t paddleTimer;
+    Sint16 direction;
+    Uint32 paddleTimer;
 };
 
 typedef struct Entity Entity;
@@ -57,12 +56,12 @@ struct GameAssets {
 };
 
 struct GameState {
-    int32_t score;
+    Sint32 score;
 
     Paddle paddle;
     Ball ball;
 
-    uint8_t controls;
+    Uint8 controls;
 };
 
 typedef struct GameAssets GameAssets;
