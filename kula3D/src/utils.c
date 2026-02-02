@@ -10,7 +10,7 @@ void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Re
     SDL_DestroyTexture(texture);
 }
 
-void RenderScore(SDL_Renderer* renderer, TTF_Font* font, int32_t score) {
+void RenderScore(SDL_Renderer* renderer, TTF_Font* font, Sint32 score) {
     SDL_Rect rect = SCORE_RECT;
     char buffer[18];
 
