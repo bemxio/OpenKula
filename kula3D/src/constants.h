@@ -55,7 +55,7 @@
 
 #if defined(__wii__)
     #define GAME_OVER_SUBCAPTION_TEXT "Press the + button to restart"
-#elif defined(__vita__) || defined(NXDK)
+#elif defined(__vita__) || defined(NXDK) || defined(PSP)
     #define GAME_OVER_SUBCAPTION_TEXT "Press the Start button to restart"
 #else
     #define GAME_OVER_SUBCAPTION_TEXT "Press the Enter key to restart"
