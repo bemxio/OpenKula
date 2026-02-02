@@ -6,11 +6,11 @@ OUTPUT_DIR = ../build/kulatwo
 SRCS = $(wildcard $(SRC_DIR)/*.c) ../mixer/mixer.c
 ASSETS = $(patsubst $(ASSETS_DIR)/%,$(OUTPUT_DIR)/assets/%,$(wildcard $(ASSETS_DIR)/*))
 
-NXDK_CFLAGS += -Wall -O2
+NXDK_CFLAGS += -Wall -fms-extensions -O2
 NXDK_DIR = ../nxdk
 NXDK_SDL = y
 
-XBE_TITLE = Kula 2
+XBE_TITLE = Kula\ 2
 GEN_XISO = kulatwo-$(shell git rev-parse --short=7 HEAD)-xbox.iso
 
 TARGET += $(ASSETS)
