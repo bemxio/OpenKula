@@ -5,6 +5,7 @@ A recreation of Kula, Kula 2 and Kula 3D from the [Kula Collection](https://stor
 OpenKula has been ported to and tested on the following platforms:
 - [PC (Windows, Linux, BSD etc.)](https://github.com/bemxio/OpenKula/tree/main)
 - [Nintendo Wii](https://github.com/bemxio/OpenKula/tree/wii)
+- [PlayStation Portable](https://github.com/bemxio/OpenKula/tree/psp)
 - [PlayStation Vita](https://github.com/bemxio/OpenKula/tree/vita)
 - Xbox
 

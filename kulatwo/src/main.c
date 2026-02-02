@@ -17,7 +17,6 @@
 
 #include <math.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -126,6 +125,8 @@ int main(int argc, char* argv[]) {
             640, 480,
         #elif defined(__vita__)
             960, 544,
+        #elif defined(PSP)
+            480, 272,
         #else
             GAME_WIDTH, GAME_HEIGHT,
         #endif
@@ -179,8 +180,8 @@ int main(int argc, char* argv[]) {
 
     bool loop = true;
 
-    int32_t screenWidth;
-    int32_t screenHeight;
+    int screenWidth;
+    int screenHeight;
 
     SDL_GetWindowSize(window, &screenWidth, &screenHeight);
     SDL_RenderSetScale(renderer,
@@ -277,6 +278,11 @@ int main(int argc, char* argv[]) {
                     }
 
                     break;
+
+                case SDL_FINGERDOWN:
+                case SDL_FINGERMOTION:
+                case SDL_FINGERUP:
+                    state.paddle.rect.x = (event.tfinger.x * GAME_WIDTH) - (state.paddle.rect.w / 2); break;
             }
         }
 
