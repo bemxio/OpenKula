@@ -15,7 +15,7 @@ GEN_XISO = kula-$(shell git rev-parse --short=7 HEAD)-xbox.iso
 
 TARGET += $(ASSETS)
 
-# targets
+# rules
 $(GEN_XISO): $(ASSETS)
 
 $(OUTPUT_DIR)/assets/%: $(ASSETS_DIR)/% | $(OUTPUT_DIR)/assets
@@ -26,3 +26,11 @@ $(OUTPUT_DIR)/assets:
 
 # includes
 include $(NXDK_DIR)/Makefile
+
+# targets
+distclean: clean
+	$(VE)$(RM) -r $(NXDK_DIR)/tools/extract-xiso/build
+	$(VE)$(MAKE) -C $(NXDK_DIR)/tools/fp20compiler distclean $(QUIET)
+	$(VE)$(MAKE) -C $(NXDK_DIR)/tools/vp20compiler distclean $(QUIET)
+	$(VE)$(MAKE) -C $(NXDK_DIR)/tools/cxbe clean $(QUIET)
+	$(VE)$(RM) -r $(ASSETS_DIR) $(OUTPUT_DIR)

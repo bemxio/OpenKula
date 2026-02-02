@@ -1,4 +1,7 @@
 # constants
+PYTHON = python3
+FFMPEG = ffmpeg
+
 GAME_TARGETS = kula kula3D kulatwo
 
 # phony
@@ -11,9 +14,8 @@ $(GAME_TARGETS): %: %/assets
 	$(MAKE) $(if $(WINDOWS),-C $@ -f Makefile.win,-C $@) $(filter-out $@,$(MAKECMDGOALS))
 
 %/assets:
-	python tools/copy_assets_to_game.py $*
-
-	ffmpeg -i $*/assets/mortietunes.mp3 $*/assets/mortietunes.wav
+	$(PYTHON) tools/copy_assets_to_game.py $*
+	$(FFMPEG) -i $*/assets/mortietunes.mp3 $*/assets/mortietunes.wav
 	$(RM) $*/assets/mortietunes.mp3
 
 # empty rule to avoid "No rule to make target" errors
