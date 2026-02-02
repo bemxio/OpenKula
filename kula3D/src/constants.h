@@ -9,7 +9,7 @@
 
 #if defined(NXDK)
     #define BACKGROUND_PATH "D:\\assets\\background.png"
-    #define BGM_PATH "D:\\assets\\mortietunes.mp3"
+    #define BGM_PATH "D:\\assets\\mortietunes.wav"
     #define ENEMY_CLOSED_PATH "D:\\assets\\trekant2.png"
     #define ENEMY_OPEN_PATH "D:\\assets\\trekant.png"
     #define FONT_PATH "D:\\assets\\skrifttype.ttf"

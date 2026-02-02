@@ -26,6 +26,7 @@ After installing/configuring `pacman` with devkitPro's repositories, you can get
 For copyright reasons, you'll need to provide the game assets yourself by copying them from your legally obtained Kula Collection installation. The required files are located in the `<kula|kula3D|kulatwo>/resources/app/assets/` directory inside Kula Collection's root directory.
 
 Simply clone the repository, then copy the assets into the `assets/` directory:
+Simply clone the repository, then copy the assets into the `assets/` directory:
 ```bash
 git clone https://github.com/bemxio/OpenKula
 cd OpenKula
