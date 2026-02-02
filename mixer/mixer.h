@@ -1,7 +1,7 @@
 #ifndef MIXER_H
 #define MIXER_H
 
-#include <SDL2/SDL.h>
+#include <SDL_audio.h>
 #include <stdlib.h>
 
 #define MIX_DEFAULT_FORMAT AUDIO_S16SYS

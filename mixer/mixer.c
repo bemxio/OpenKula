@@ -6,10 +6,7 @@ void Mix_OpenAudio(int frequency, Uint16 format, int channels, int chunkSize) {
 
 Mix_Music* Mix_LoadMUS(const char* file) {
     Mix_Music* music = (Mix_Music*)malloc(sizeof(Mix_Music));
-
-    if (SDL_LoadWAV(file, &music->spec, &music->buffer, &music->length) == NULL) {
-        free(music); return NULL;
-    }
+    SDL_LoadWAV(file, &music->spec, &music->buffer, &music->length);
 
     return music;
 }
