@@ -3,7 +3,7 @@ SRC_DIR = src
 ASSETS_DIR = assets
 OUTPUT_DIR = ../build/kula
 
-SRCS = $(wildcard $(SRC_DIR)/*.c)
+SRCS = $(wildcard $(SRC_DIR)/*.c) ../mixer/mixer.c
 ASSETS = $(patsubst $(ASSETS_DIR)/%,$(OUTPUT_DIR)/assets/%,$(wildcard $(ASSETS_DIR)/*))
 
 NXDK_DIR = ../nxdk
