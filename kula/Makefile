@@ -6,6 +6,7 @@ OUTPUT_DIR = ../build/kula
 SRCS = $(wildcard $(SRC_DIR)/*.c) ../mixer/mixer.c
 ASSETS = $(patsubst $(ASSETS_DIR)/%,$(OUTPUT_DIR)/assets/%,$(wildcard $(ASSETS_DIR)/*))
 
+NXDK_CFLAGS += -Wall -O2
 NXDK_DIR = ../nxdk
 NXDK_SDL = y
 
