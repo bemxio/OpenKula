@@ -45,6 +45,10 @@ set(DIST_ARCHIVE ${PROJECT_NAME}-${PROJECT_VERSION}-psp.zip)
 add_custom_target(dist ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIRECTORY}
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${DIST_DIRECTORY}/assets
+  COMMAND ln -s ${DIST_DIRECTORY}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
   COMMAND ${CMAKE_COMMAND} -E copy EBOOT.PBP ${DIST_DIRECTORY}/EBOOT.PBP
+  COMMAND magick ${DIST_DIRECTORY}/assets/background.png -resize 480x272\! ${DIST_DIRECTORY}/assets/background.png
+  COMMAND magick ${DIST_DIRECTORY}/assets/kula.png -resize 25% ${DIST_DIRECTORY}/assets/kula.png
+  COMMAND magick ${DIST_DIRECTORY}/assets/trekant2.png -resize 75% ${DIST_DIRECTORY}/assets/trekant2.png
   COMMAND ${CMAKE_COMMAND} -E tar c ${DIST_ARCHIVE} --format=zip ${DIST_DIRECTORY}
 )
