@@ -1,6 +1,13 @@
 # OpenKula
 A recreation of Kula, Kula 2 and Kula 3D from the [Kula Collection](https://store.steampowered.com/app/4237330/Kula_Collection/) by Mor10 Productions, written in C using [SDL](https://www.libsdl.org/). Aims to accurately replicate every nuance of the original Scratch projects, whilst allowing for portability across multiple platforms.
 
+## Supported platforms
+OpenKula has been ported to and tested on the following platforms:
+- [PC (Windows, Linux, BSD etc.)](https://github.com/bemxio/OpenKula/tree/main)
+- [Nintendo Wii](https://github.com/bemxio/OpenKula/tree/wii)
+- [PlayStation Vita](https://github.com/bemxio/OpenKula/tree/vita)
+- Xbox
+
 ## Building
 To build one of the game targets, follow steps for your target platform below.
 
