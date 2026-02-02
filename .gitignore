@@ -7,6 +7,7 @@
 *.svg
 *.png
 *.mp3
+*.wav
 kula*/**/*.ttf
 
 # Scratch project files

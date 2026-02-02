@@ -13,6 +13,9 @@ $(GAME_TARGETS): %: %/assets
 %/assets:
 	python tools/copy_assets_to_game.py $*
 
+	ffmpeg -i $*/assets/mortietunes.mp3 $*/assets/mortietunes.wav
+	$(RM) $*/assets/mortietunes.mp3
+
 # empty rule to avoid "No rule to make target" errors
 %:
 	@:
