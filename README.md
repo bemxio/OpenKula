@@ -36,8 +36,9 @@ cp -r ~/.steam/steam/steamapps/common/Kula\ Collection/*/resources/app/assets/*.
 ```
 
 ### Compilation
-After installing all dependencies, cloning the repository and copying assets, build the desired target with `make`:
+After installing all dependencies, cloning the repository and copying assets, source the `activate_nxdk.sh` script and build the desired target with `make`:
 ```bash
+source activate_nxdk.sh
 make <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired target
 ```
 
