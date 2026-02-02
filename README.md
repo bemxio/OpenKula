@@ -1,6 +1,20 @@
 # OpenKula
 A recreation of Kula, Kula 2 and Kula 3D from the [Kula Collection](https://store.steampowered.com/app/4237330/Kula_Collection/) by Mor10 Productions, written in C using [SDL](https://www.libsdl.org/). Aims to accurately replicate every nuance of the original Scratch projects, whilst allowing for portability across multiple platforms.
 
+## Supported platforms
+OpenKula has been ported to and tested on the following platforms:
+- PC (Windows, Linux, BSD etc.)
+- [Nintendo Wii](https://github.com/bemxio/OpenKula/tree/wii)
+- [PlayStation Vita](https://github.com/bemxio/OpenKula/tree/vita)
+- [Xbox](https://github.com/bemxio/OpenKula/tree/xbox)
+
+<!-- Planned future platforms:
+- Nintendo 3DS
+- PlayStation 2
+- PlayStation 3
+- Xbox One/Series X/S (UWP)
+-->
+
 ## Building
 To build one of the game targets, follow steps for your target platform below.
 
@@ -9,7 +23,7 @@ Before building, ensure you have the following dependencies installed:
 - [GCC](https://gcc.gnu.org/) 9.x+ or [Clang](https://clang.llvm.org/) (GCC is used by default, Clang can be used by setting the `CC` environment variable)
 - [SDL2](https://www.libsdl.org/) with [SDL2_image](https://www.libsdl.org/projects/SDL_image/), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 - [Python](https://www.python.org/) 3.6+ with [CairoSVG](https://cairosvg.org/)
-- [Make](https://www.gnu.org/software/make/)
+- [GNU Make](https://www.gnu.org/software/make/)
 - [Git](https://git-scm.com/)
 - (Optional) [MinGW-w64](https://www.mingw-w64.org/) for cross-compiling to Windows
 
@@ -19,7 +33,7 @@ On Arch-based distros, use `pacman -S base-devel git sdl2 sdl2_image sdl2_mixer 
 ### Assets
 For copyright reasons, you'll need to provide the game assets yourself by copying them from your legally obtained Kula Collection installation. The required files are located in the `<kula|kula3D|kulatwo>/resources/app/assets/` directory inside Kula Collection's root directory.
 
-After cloning the repository, simply copy the assets into the `assets/` directory:
+Simply clone the repository, then copy the assets into the `assets/` directory:
 ```bash
 git clone https://github.com/bemxio/OpenKula
 cd OpenKula
@@ -30,7 +44,7 @@ cp -r ~/.steam/steam/steamapps/common/Kula\ Collection/*/resources/app/assets/*.
 ### Compilation
 After installing all dependencies and copying assets, build the desired target with `make`:
 ```bash
-# Unix-like systems (Linux, macOS, etc.)
+# Unix-like systems (Linux, BSD, etc.)
 make <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired target
 
 # Windows (using MinGW)
