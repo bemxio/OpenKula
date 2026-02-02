@@ -31,24 +31,33 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   ${SDL2_TTF_LIBRARIES}
 )
 
+execute_process(
+  COMMAND magick
+    ${CMAKE_CURRENT_SOURCE_DIR}/assets/background.png -resize 144x80!
+    \( ${CMAKE_CURRENT_SOURCE_DIR}/assets/kula.png -resize 60x60! \)
+    -gravity center -composite ${CMAKE_CURRENT_BINARY_DIR}/icon0.png
+
+  COMMAND magick
+    ${CMAKE_CURRENT_SOURCE_DIR}/assets/background.png -resize 480x272\! ${CMAKE_CURRENT_BINARY_DIR}/pic1.png
+)
+
 create_pbp_file(TARGET ${PROJECT_NAME}
   TITLE "Kula 3D"
   VERSION 01.00
-  ICON_PATH NULL
-  BACKGROUND_PATH NULL
-  PREVIEW_PATH NULL
+  ICON_PATH ${CMAKE_CURRENT_BINARY_DIR}/icon0.png
+  BACKGROUND_PATH ${CMAKE_CURRENT_BINARY_DIR}/pic1.png
 )
 
 set(DIST_DIRECTORY PSP/GAME/${PROJECT_NAME})
 set(DIST_ARCHIVE ${PROJECT_NAME}-${PROJECT_VERSION}-psp.zip)
 
-add_custom_target(dist ALL
+add_custom_target(${PROJECT_NAME}-dist ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIRECTORY}
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${DIST_DIRECTORY}/assets
-  COMMAND ln -s ${DIST_DIRECTORY}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
-  COMMAND ${CMAKE_COMMAND} -E copy EBOOT.PBP ${DIST_DIRECTORY}/EBOOT.PBP
-  COMMAND magick ${DIST_DIRECTORY}/assets/background.png -resize 480x272\! ${DIST_DIRECTORY}/assets/background.png
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/pic1.png ${DIST_DIRECTORY}/assets/background.png
   COMMAND magick ${DIST_DIRECTORY}/assets/kula.png -resize 25% ${DIST_DIRECTORY}/assets/kula.png
   COMMAND magick ${DIST_DIRECTORY}/assets/trekant2.png -resize 75% ${DIST_DIRECTORY}/assets/trekant2.png
+  COMMAND ln -s ${DIST_DIRECTORY}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
+  COMMAND ${CMAKE_COMMAND} -E copy EBOOT.PBP ${DIST_DIRECTORY}/EBOOT.PBP
   COMMAND ${CMAKE_COMMAND} -E tar c ${DIST_ARCHIVE} --format=zip ${DIST_DIRECTORY}
 )
