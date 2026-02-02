@@ -6,9 +6,11 @@ OUTPUT_DIR = ../build/kula3D
 SRCS = $(wildcard $(SRC_DIR)/*.c) ../mixer/mixer.c
 ASSETS = $(patsubst $(ASSETS_DIR)/%,$(OUTPUT_DIR)/assets/%,$(wildcard $(ASSETS_DIR)/*))
 
-NXDK_CFLAGS += -Wall -fms-extensions -O2
+NXDK_CFLAGS += -Wall -fms-extensions -O3
 NXDK_DIR = ../nxdk
 NXDK_SDL = y
+
+LTO = y
 
 XBE_TITLE = Kula\ 3D
 GEN_XISO = kula3D-$(shell git rev-parse --short=7 HEAD)-xbox.iso
