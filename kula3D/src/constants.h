@@ -25,7 +25,11 @@
     #define PLAYER_PATH "assets/kula.png"
 #endif
 
-#define FONT_INITIAL_SIZE 64
+#if defined(PSP)
+    #define FONT_INITIAL_SIZE 32
+#else
+    #define FONT_INITIAL_SIZE 64
+#endif
 
 #define PLAYER_INITIAL_RECT {23, 284, 44, 46}
 #define PLAYER_SPEED 10
