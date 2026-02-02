@@ -21,9 +21,9 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
+add_executable(${PROJECT_NAME} src/main.c src/utils.c)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fms-extensions -O2")
 
-add_executable(${PROJECT_NAME} src/main.c src/utils.c)
 target_link_libraries(${PROJECT_NAME}
   SDL2_image SDL2_mixer SDL2_ttf
   SDL2::SDL2 SDL2main
@@ -33,18 +33,24 @@ target_link_libraries(${PROJECT_NAME}
   z bz2 stdc++
 )
 
+execute_process(
+  COMMAND magick
+    ${CMAKE_CURRENT_SOURCE_DIR}/assets/kulabakgrunn.png -resize 128x48!
+    \( ${CMAKE_CURRENT_SOURCE_DIR}/assets/kula.png -resize 36x36! \)
+    -gravity center -composite ${CMAKE_CURRENT_BINARY_DIR}/icon.png
+)
+
 ogc_create_dol(${PROJECT_NAME})
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/meta.xml ${CMAKE_CURRENT_BINARY_DIR}/meta.xml)
 
 set(DIST_DIRECTORY apps/${PROJECT_NAME})
 set(DIST_ARCHIVE ${PROJECT_NAME}-${PROJECT_VERSION}-wii.zip)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/meta.xml ${CMAKE_CURRENT_BINARY_DIR}/meta.xml)
-
-add_custom_target(dist ALL
+add_custom_target(${PROJECT_NAME}-dist ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIRECTORY}
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${DIST_DIRECTORY}/assets
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.dol ${DIST_DIRECTORY}/boot.dol
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/meta.xml ${DIST_DIRECTORY}
-# COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/icon.png ${DIST_DIRECTORY}
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/icon.png ${DIST_DIRECTORY}
   COMMAND ${CMAKE_COMMAND} -E tar c ${DIST_ARCHIVE} --format=zip ${DIST_DIRECTORY}
 )

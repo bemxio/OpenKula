@@ -4,6 +4,6 @@
 	<version>${PROJECT_VERSION}</version>
 	<release_date></release_date>
 	<coder>OpenKula</coder>
-	<short_description>Kula on the Nintendo Wii™!</short_description>
+	<short_description></short_description>
 	<long_description></long_description>
 </app>
