@@ -11,7 +11,7 @@
     #define BACKGROUND_PATH "D:\\assets\\blue_sky.png"
     #define BALL_PATH "D:\\assets\\drakt1.png"
     #define FONT_PATH "D:\\assets\\skrifttype.ttf"
-    #define MUSIC_PATH "D:\\assets\\mortietunes.mp3"
+    #define MUSIC_PATH "D:\\assets\\mortietunes.wav"
 #else
     #define BACKGROUND_PATH "assets/blue_sky.png"
     #define BALL_PATH "assets/drakt1.png"
