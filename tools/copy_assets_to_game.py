@@ -56,7 +56,7 @@ def copy_assets_to_game(game: str, directory: str) -> None:
 
         if target.endswith(".png"):
             if game == "kulatwo":
-                svg2png(url=f"assets/{source}", write_to=f"{game}/assets/{target}")
+                svg2png(url=f"assets/{source}", scale=3 if target == "drakt1.png" else 1, write_to=f"{game}/assets/{target}")
             else:
                 extract_png_from_svg(f"assets/{source}", f"{game}/assets/{target}")
         else:
