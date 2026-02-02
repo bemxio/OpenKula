@@ -278,6 +278,11 @@ int main(int argc, char* argv[]) {
                     }
 
                     break;
+
+                case SDL_FINGERDOWN:
+                case SDL_FINGERMOTION:
+                case SDL_FINGERUP:
+                    state.paddle.rect.x = (event.tfinger.x * GAME_WIDTH) - (state.paddle.rect.w / 2); break;
             }
         }
 
