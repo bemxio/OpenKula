@@ -20,7 +20,10 @@ distclean: clean
 
 # rules
 $(GAME_TARGETS): %: %/assets
-	$(CMAKE) -S $@ -B $(BUILD_DIR)/$@ -DCMAKE_BUILD_TYPE=Release && $(CMAKE) --build $(BUILD_DIR)/$@
+	$(CMAKE) -S $@ -B $(BUILD_DIR)/$@ \
+		-DCMAKE_TOOLCHAIN_FILE="${PSPDEV}/psp/share/pspdev.cmake" \
+		-DCMAKE_BUILD_TYPE=Release
+	$(CMAKE) --build $(BUILD_DIR)/$@
 
 %/assets:
 	$(PYTHON) tools/copy_assets_to_game.py $*

@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 3.11)
+
+project(kula3D)
+execute_process(COMMAND git rev-parse --short HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE PROJECT_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_QUIET
+)
+
+include(FindPkgConfig)
+
+pkg_search_module(SDL2 REQUIRED sdl2)
+pkg_search_module(SDL2_IMAGE REQUIRED SDL2_image)
+pkg_search_module(SDL2_MIXER REQUIRED SDL2_mixer)
+pkg_search_module(SDL2_TTF REQUIRED SDL2_ttf)
+
+add_executable(${PROJECT_NAME} src/main.c src/utils.c)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fms-extensions -O2")
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+  ${SDL2_INCLUDE_DIRS}
+  ${SDL2_IMAGE_INCLUDE_DIRS}
+  ${SDL2_MIXER_INCLUDE_DIRS}
+  ${SDL2_TTF_INCLUDE_DIRS}
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  ${SDL2_LIBRARIES}
+  ${SDL2_IMAGE_LIBRARIES}
+  ${SDL2_MIXER_LIBRARIES}
+  ${SDL2_TTF_LIBRARIES}
+)
+
+create_pbp_file(TARGET ${PROJECT_NAME}
+  TITLE "Kula 3D"
+  VERSION 01.00
+  ICON_PATH NULL
+  BACKGROUND_PATH NULL
+  PREVIEW_PATH NULL
+)
+
+set(DIST_DIRECTORY PSP/GAME/${PROJECT_NAME})
+set(DIST_ARCHIVE ${PROJECT_NAME}-${PROJECT_VERSION}-psp.zip)
+
+add_custom_target(dist ALL
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${DIST_DIRECTORY}
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${DIST_DIRECTORY}/assets
+  COMMAND ${CMAKE_COMMAND} -E copy EBOOT.PBP ${DIST_DIRECTORY}/EBOOT.PBP
+  COMMAND ${CMAKE_COMMAND} -E tar c ${DIST_ARCHIVE} --format=zip ${DIST_DIRECTORY}
+)
