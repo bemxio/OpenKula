@@ -1,45 +1,143 @@
-# constants
-CC = gcc
-CFLAGS = -Wall -fms-extensions -O2
-LDLIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+#---------------------------------------------------------------------------------
+# Clear the implicit built in rules
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(PSL1GHT)),)
+$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
+endif
 
-SRC_DIR = src
-ASSETS_DIR = assets
-BUILD_DIR = ../build/kula
+include $(PSL1GHT)/ppu_rules
 
-SOURCES = $(wildcard $(SRC_DIR)/*.c)
-HEADERS = $(wildcard $(SRC_DIR)/*.h)
-OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
-ASSETS = $(wildcard $(ASSETS_DIR)/*)
+#---------------------------------------------------------------------------------
+# TARGET is the name of the output
+# BUILD is the directory where object files & intermediate files will be placed
+# SOURCES is a list of directories containing source code
+# INCLUDES is a list of directories containing extra header files
+#---------------------------------------------------------------------------------
+TARGET		:=	$(notdir $(CURDIR))
+BUILD		:=	build
+SOURCES		:=	src
+#DATA		:=	data
+#INCLUDES	:=	include
 
-EXECUTABLE = kula
-ARCHIVE = kula-$(shell git rev-parse --short=7 HEAD)-linux-x64.tar.gz
+TITLE		:=	Kula
+APPID		:=	KULA00001
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
+#---------------------------------------------------------------------------------
+# options for code generation
+#---------------------------------------------------------------------------------
 
-# phony
-.PHONY: all dist clean distclean run
+CFLAGS		=	-O2 -Wall -mcpu=cell -fms-extensions $(MACHDEP) $(INCLUDE)
+CXXFLAGS	=	$(CFLAGS)
 
-# targets
-all: $(BUILD_DIR)/$(EXECUTABLE)
+LDFLAGS		=	$(MACHDEP) -Wl,-Map,$(notdir $@).map
 
-dist: $(BUILD_DIR)/$(EXECUTABLE)
-	tar -czf $(ARCHIVE) -C $(BUILD_DIR) --exclude='*.o' .
+#---------------------------------------------------------------------------------
+# any extra libraries we wish to link with the project
+#---------------------------------------------------------------------------------
+LIBS	:=	-lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2 -laudio -lm -lrsx -lgcm_sys -lio -lsysutil
 
+#---------------------------------------------------------------------------------
+# list of directories containing libraries, this must be the top level containing
+# include and lib
+#---------------------------------------------------------------------------------
+LIBDIRS	:=
+
+#---------------------------------------------------------------------------------
+# no real need to edit anything past this point unless you need to add additional
+# rules for different file extensions
+#---------------------------------------------------------------------------------
+ifneq ($(BUILD),$(notdir $(CURDIR)))
+#---------------------------------------------------------------------------------
+
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+
+export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
+					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
+
+export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+
+export BUILDDIR	:=	$(CURDIR)/$(BUILD)
+
+#---------------------------------------------------------------------------------
+# automatically build a list of object files for our project
+#---------------------------------------------------------------------------------
+CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
+BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+
+#---------------------------------------------------------------------------------
+# use CXX for linking C++ projects, CC for standard C
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(CPPFILES)),)
+	export LD	:=	$(CC)
+else
+	export LD	:=	$(CXX)
+endif
+
+export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
+					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
+					$(sFILES:.s=.o) $(SFILES:.S=.o)
+
+#---------------------------------------------------------------------------------
+# build a list of include paths
+#---------------------------------------------------------------------------------
+export INCLUDE	:=	$(foreach dir,$(INCLUDES), -I$(CURDIR)/$(dir)) \
+					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+					$(LIBPSL1GHT_INC) \
+					-I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/portlibs/ppu/include \
+					-I$(CURDIR)/$(BUILD)
+
+#---------------------------------------------------------------------------------
+# build a list of library paths
+#---------------------------------------------------------------------------------
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
+					$(LIBPSL1GHT_LIB) \
+					-L$(PSL1GHT)/ppu/lib -L$(PSL1GHT)/portlibs/ppu/lib
+
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+.PHONY: $(BUILD) clean
+
+#---------------------------------------------------------------------------------
+$(BUILD):
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
+#---------------------------------------------------------------------------------
 clean:
-	$(RM) -r $(BUILD_DIR) *.tar.gz
+	@echo clean ...
+	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self
 
-distclean: clean
-	$(RM) -r $(ASSETS_DIR)
+#---------------------------------------------------------------------------------
+run:
+	ps3load $(OUTPUT).self
 
-run: $(BUILD_DIR)/$(EXECUTABLE)
-	./$<
 
-# rules
-$(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS) | $(ASSETS) $(BUILD_DIR)
-	cp -r $(ASSETS_DIR) $(BUILD_DIR)
-	$(CC) $(CFLAGS) $^ $(LDLIBS) -o $@
+#---------------------------------------------------------------------------------
+else
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(HEADERS) $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+DEPENDS	:=	$(OFILES:.o=.d)
 
-$(BUILD_DIR):
-	mkdir -p $@
+#---------------------------------------------------------------------------------
+# main targets
+#---------------------------------------------------------------------------------
+$(OUTPUT).pkg: $(OUTPUT).self
+$(OUTPUT).self: $(OUTPUT).elf
+$(OUTPUT).elf:	$(OFILES)
+
+#---------------------------------------------------------------------------------
+# This rule links in binary data with the .bin extension
+#---------------------------------------------------------------------------------
+%.bin.o	:	%.bin
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@$(bin2o)
+
+-include $(DEPENDS)
+
+#---------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------
