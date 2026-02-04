@@ -16,7 +16,11 @@ build/
 
 # Executables
 *.exe
-*.out
+*.elf
+*.self
+
+# Package files
+*.pkg
 
 # Archive files
 *.tar.gz
