@@ -127,6 +127,8 @@ int main(int argc, char* argv[]) {
             960, 544,
         #elif defined(PSP)
             480, 272,
+        #elif defined(__PPU__)
+            1280, 720,
         #else
             GAME_WIDTH, GAME_HEIGHT,
         #endif
