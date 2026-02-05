@@ -18,6 +18,7 @@ include $(PSL1GHT)/ppu_rules
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	src
+ASSETS 		:=	assets
 #DATA		:=	data
 #INCLUDES	:=	include
 
@@ -51,14 +52,16 @@ LIBDIRS	:=
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export OUTPUT		:=	$(CURDIR)/$(TARGET)
 
-export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
-					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
+export VPATH		:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
+						$(foreach dir,$(DATA),$(CURDIR)/$(dir))
 
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+export DEPSDIR		:=	$(CURDIR)/$(BUILD)
 
-export BUILDDIR	:=	$(CURDIR)/$(BUILD)
+export BUILDDIR		:=	$(CURDIR)/$(BUILD)
+
+export ASSETSDIR	:=	$(CURDIR)/$(ASSETS)
 
 #---------------------------------------------------------------------------------
 # automatically build a list of object files for our project
@@ -87,16 +90,14 @@ export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 #---------------------------------------------------------------------------------
 export INCLUDE	:=	$(foreach dir,$(INCLUDES), -I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-					$(LIBPSL1GHT_INC) \
-					-I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/portlibs/ppu/include \
+					$(LIBPSL1GHT_INC) -I$(PSL1GHT)/portlibs/ppu/include \
 					-I$(CURDIR)/$(BUILD)
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					$(LIBPSL1GHT_LIB) \
-					-L$(PSL1GHT)/ppu/lib -L$(PSL1GHT)/portlibs/ppu/lib
+					$(LIBPSL1GHT_LIB) -L$(PSL1GHT)/portlibs/ppu/lib
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean
@@ -109,7 +110,11 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self
+	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT)*.self $(OUTPUT)*.pkg
+
+distclean: clean
+	@echo distclean ...
+	@rm -fr $(ASSETS)
 
 #---------------------------------------------------------------------------------
 run:
@@ -125,6 +130,16 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).pkg: $(OUTPUT).self
+	$(VERB) echo building pkg ... $(notdir $@)
+	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
+	$(VERB) cp $(ICON0) $(BUILDDIR)/pkg/ICON0.PNG
+	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+	$(VERB) $(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
+	$(VERB) cp -r $(ASSETSDIR) $(BUILDDIR)/pkg/USRDIR/$(notdir $(ASSETSDIR))
+	$(VERB) $(PKG) --contentid $(CONTENTID) $(BUILDDIR)/pkg/ $@ >> /dev/null
+	$(VERB) cp $@ $(basename $@).gnpdrm.pkg
+	$(VERB) $(PACKAGE_FINALIZE) $(basename $@).gnpdrm.pkg
+
 $(OUTPUT).self: $(OUTPUT).elf
 $(OUTPUT).elf:	$(OFILES)
 
