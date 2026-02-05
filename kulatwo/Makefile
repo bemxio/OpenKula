@@ -22,7 +22,7 @@ ASSETS 		:=	assets
 #DATA		:=	data
 #INCLUDES	:=	include
 
-TITLE		:=	Kula\ 2
+TITLE		:=	Kula 2
 APPID		:=	KULA00002
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 #---------------------------------------------------------------------------------

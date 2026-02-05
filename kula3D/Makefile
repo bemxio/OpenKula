@@ -22,7 +22,7 @@ ASSETS 		:=	assets
 #DATA		:=	data
 #INCLUDES	:=	include
 
-TITLE		:=	Kula\ 3D
+TITLE		:=	Kula 3D
 APPID		:=	KULA00003
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 #---------------------------------------------------------------------------------
