@@ -14,6 +14,13 @@
     #define ENEMY_OPEN_PATH "D:\\assets\\fiende01.png"
     #define FONT_PATH "D:\\assets\\skrifttype.ttf"
     #define PLAYER_PATH "D:\\assets\\kula.png"
+#elif defined(__PPU__)
+    #define BACKGROUND_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/kulabakgrunn.png"
+    #define BGM_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/mortietunes.mp3"
+    #define ENEMY_CLOSED_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/fiende02.png"
+    #define ENEMY_OPEN_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/fiende01.png"
+    #define FONT_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/skrifttype.ttf"
+    #define PLAYER_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/kula.png"
 #else
     #define BACKGROUND_PATH "assets/kulabakgrunn.png"
     #define BGM_PATH "assets/mortietunes.mp3"
