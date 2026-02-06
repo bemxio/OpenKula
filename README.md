@@ -20,7 +20,7 @@ The easiest way to set up a build environment is to use [Docker](https://www.doc
 On Arch-based Linux distributions, you can install both of those with `pacman -S docker git`. On other distros, refer to Docker's official website and your package manager for instructions.
 
 <!-- For the Docker haters out there, I'm sorry, but it's either that, a Debian 12 chroot/VM or creating an updated fork of PSL1GHT, and I ain't got the energy to do that :-) 
-If you REALLY want to do this without Docker, set up a Debian 12 environment, install https://github.com/ps3dev/ps3toolchain, github.com/humbertodias/SDL2_PSL1GHT_Libs and `python3-cairosvg` and run `make <kula|kula3D|kulatwo>`. -->
+If you REALLY want to do this without Docker, set up a Debian 12 environment, install https://github.com/ps3dev/ps3toolchain, github.com/humbertodias/SDL2_PSL1GHT_Libs, `python3-cairosvg` and `imagemagick`, then run `make <kula|kula3D|kulatwo>`. -->
 
 ### Assets
 For copyright reasons, you'll need to provide the game assets yourself by copying them from your legally obtained Kula Collection installation. The required files are located in the `<kula|kula3D|kulatwo>/resources/app/assets/` directory inside Kula Collection's root directory.
@@ -50,7 +50,7 @@ After installing all dependencies and copying assets, build the desired target w
 docker run --rm -v "$(pwd)":/OpenKula -w /OpenKula openkula make <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired target
 ```
 
-This will produce a PKG package inside the `<kula|kula3D|kulatwo>/build` directory. You can also run `make` to build all three targets at once.
+This will produce a `<kula|kula3D|kulatwo>.gnpdrm.pkg` file inside the `<kula|kula3D|kulatwo>` directory. You can also run `make` to build all three targets at once.
 
 ## License
 This project is licensed under the MIT License - see the [`LICENSE`](LICENSE) file for details.
