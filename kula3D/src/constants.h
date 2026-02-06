@@ -15,6 +15,14 @@
     #define FONT_PATH "D:\\assets\\skrifttype.ttf"
     #define LOGO_PATH "D:\\assets\\logo.png"
     #define PLAYER_PATH "D:\\assets\\kula.png"
+#elif defined(__PPU__)
+    #define BACKGROUND_PATH "/dev_hdd0/game/KULA00003/USRDIR/assets/background.png"
+    #define BGM_PATH "/dev_hdd0/game/KULA00003/USRDIR/assets/mortietunes.mp3"
+    #define ENEMY_CLOSED_PATH "/dev_hdd0/game/KULA00003/USRDIR/assets/trekant2.png"
+    #define ENEMY_OPEN_PATH "/dev_hdd0/game/KULA00003/USRDIR/assets/trekant.png"
+    #define FONT_PATH "/dev_hdd0/game/KULA00003/USRDIR/assets/skrifttype.ttf"
+    #define LOGO_PATH "/dev_hdd0/game/KULA00003/USRDIR/assets/logo.png"
+    #define PLAYER_PATH "/dev_hdd0/game/KULA00003/USRDIR/assets/kula.png"
 #else
     #define BACKGROUND_PATH "assets/background.png"
     #define BGM_PATH "assets/mortietunes.mp3"
@@ -55,7 +63,7 @@
 
 #if defined(__wii__)
     #define GAME_OVER_SUBCAPTION_TEXT "Press the + button to restart"
-#elif defined(__vita__) || defined(NXDK)
+#elif defined(__vita__) || defined(NXDK) || defined(PSP) || defined(__PPU__)
     #define GAME_OVER_SUBCAPTION_TEXT "Press the Start button to restart"
 #else
     #define GAME_OVER_SUBCAPTION_TEXT "Press the Enter key to restart"

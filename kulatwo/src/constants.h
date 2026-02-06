@@ -12,6 +12,11 @@
     #define BALL_PATH "D:\\assets\\drakt1.png"
     #define FONT_PATH "D:\\assets\\skrifttype.ttf"
     #define MUSIC_PATH "D:\\assets\\mortietunes.wav"
+#elif defined(__PPU__)
+    #define BACKGROUND_PATH "/dev_hdd0/game/KULA00002/USRDIR/assets/blue_sky.png"
+    #define BALL_PATH "/dev_hdd0/game/KULA00002/USRDIR/assets/drakt1.png"
+    #define FONT_PATH "/dev_hdd0/game/KULA00002/USRDIR/assets/skrifttype.ttf"
+    #define MUSIC_PATH "/dev_hdd0/game/KULA00002/USRDIR/assets/mortietunes.mp3"
 #else
     #define BACKGROUND_PATH "assets/blue_sky.png"
     #define BALL_PATH "assets/drakt1.png"
