@@ -15,17 +15,12 @@ OpenKula has been ported to and tested on various platforms, with varying levels
 To build one of the game targets, follow steps for your target platform below.
 
 ### Prerequisites
-Before building, ensure you have the following dependencies installed:
+The easiest way to set up a build environment is to use [Docker](https://www.docker.com/) and the bundled-in [`Dockerfile`](Dockerfile) that will create an image with all the necessary tools pre-installed. You'll also need [Git](https://git-scm.com/) to clone the repository.
 
-- [GCC](https://gcc.gnu.org/) 9.x+ or [Clang](https://clang.llvm.org/) (GCC is used by default, Clang can be used by setting the `CC` environment variable)
-- [SDL2](https://www.libsdl.org/) with [SDL2_image](https://www.libsdl.org/projects/SDL_image/), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
-- [Python](https://www.python.org/) 3.6+ with [CairoSVG](https://cairosvg.org/)
-- [GNU Make](https://www.gnu.org/software/make/)
-- [Git](https://git-scm.com/)
-- (Optional) [MinGW-w64](https://www.mingw-w64.org/) for cross-compiling to Windows
+On Arch-based Linux distributions, you can install both of those with `pacman -S docker git`. On other distros, refer to Docker's official website and your package manager for instructions.
 
-On Debian-based distributions, you can install everything you need with `apt install build-essential git libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev python3 python3-cairosvg`.
-On Arch-based distros, use `pacman -S base-devel git sdl2 sdl2_image sdl2_mixer sdl2_ttf python python-cairosvg`.
+<!-- For the Docker haters out there, I'm sorry, but it's either that, a Debian 12 chroot/VM or creating an updated fork of PSL1GHT, and I ain't got the energy to do that :-) 
+If you REALLY want to do this without Docker, set up a Debian 12 environment, install https://github.com/ps3dev/ps3toolchain, github.com/humbertodias/SDL2_PSL1GHT_Libs and `python3-cairosvg` and run `make <kula|kula3D|kulatwo>`. -->
 
 ### Assets
 For copyright reasons, you'll need to provide the game assets yourself by copying them from your legally obtained Kula Collection installation. The required files are located in the `<kula|kula3D|kulatwo>/resources/app/assets/` directory inside Kula Collection's root directory.
@@ -39,20 +34,23 @@ cd OpenKula
 cp -r ~/.steam/steam/steamapps/common/Kula\ Collection/*/resources/app/assets/*.{svg,mp3} assets/ # Adjust the source path as necessary
 ```
 
+### Container setup
+To build the Docker image, run the following command in the root of the repository:
+
+```bash
+docker build -t openkula .
+```
+
+This will create a Debian 12-based image with the necessary dependencies, including [PSL1GHT](https://psl1ght.com/), [SDL2_PSL1GHT](https://github.com/humbertodias/SDL2_PSL1GHT/) with its libraries and [CairoSVG](https://cairosvg.org/).
+
 ### Compilation
 After installing all dependencies and copying assets, build the desired target with `make`:
 
 ```bash
-# Unix-like systems (Linux, BSD, etc.)
-make <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired target
-
-# Windows (using MinGW)
-make WINDOWS=1 <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired target
+docker run --rm -v "$(pwd)":/OpenKula -w /OpenKula openkula make <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your desired target
 ```
 
-This will produce an executable file together with the assets inside the `build/<kula|kula3D|kulatwo>` directory. You can also run `make <kula|kula3D|kulatwo> run` to immediately launch the game after building, or `make` to build all three targets at once.
-
-In case of cross-compiling for Windows, you can also bundle the required DLLs and package everything into a ZIP file with `make WINDOWS=1 <kula|kula3D|kulatwo> dist`.
+This will produce a PKG package inside the `<kula|kula3D|kulatwo>/build` directory. You can also run `make` to build all three targets at once.
 
 ## License
 This project is licensed under the MIT License - see the [`LICENSE`](LICENSE) file for details.
