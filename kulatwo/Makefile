@@ -63,6 +63,10 @@ export BUILDDIR		:=	$(CURDIR)/$(BUILD)
 
 export ASSETSDIR	:=	$(CURDIR)/$(ASSETS)
 
+export ICON0		:=	$(ASSETSDIR)/drakt1.png
+
+export PIC1 		:=	$(ASSETSDIR)/kulabakgrunn.png
+
 #---------------------------------------------------------------------------------
 # automatically build a list of object files for our project
 #---------------------------------------------------------------------------------
@@ -132,7 +136,8 @@ DEPENDS	:=	$(OFILES:.o=.d)
 $(OUTPUT).pkg: $(OUTPUT).self
 	$(VERB) echo building pkg ... $(notdir $@)
 	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
-	$(VERB) cp $(ICON0) $(BUILDDIR)/pkg/ICON0.PNG
+	$(VERB) magisk $(ICON0) -resize 176x176\! -background none -gravity center -extent 320x176 $(BUILDDIR)/pkg/ICON0.PNG
+	$(VERB) magisk $(PIC1) -resize 1920x1080\! $(BUILDDIR)/pkg/PIC1.PNG
 	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
 	$(VERB) $(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
 	$(VERB) cp -r $(ASSETSDIR) $(BUILDDIR)/pkg/USRDIR/$(notdir $(ASSETSDIR))
