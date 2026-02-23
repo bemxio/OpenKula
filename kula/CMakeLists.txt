@@ -16,10 +16,14 @@ execute_process(COMMAND git rev-parse --short HEAD
   ERROR_QUIET
 )
 
-add_subdirectory(../submodules/SDL ${CMAKE_BINARY_DIR}/SDL)
-add_subdirectory(../submodules/SDL_image ${CMAKE_BINARY_DIR}/SDL_image)
-add_subdirectory(../submodules/SDL_mixer ${CMAKE_BINARY_DIR}/SDL_mixer)
-add_subdirectory(../submodules/SDL_ttf ${CMAKE_BINARY_DIR}/SDL_ttf)
+set(SMDH_NAME "Kula")
+#set(SMDH_ICON ${CMAKE_BINARY_DIR}/icon.png)
+set(CTR_3DSXTOOL_ROMFS ${CMAKE_SOURCE_DIR}/assets)
+
+add_subdirectory(../submodules/SDL ${CMAKE_BINARY_DIR}/../SDL)
+add_subdirectory(../submodules/SDL_image ${CMAKE_BINARY_DIR}/../SDL_image)
+add_subdirectory(../submodules/SDL_mixer ${CMAKE_BINARY_DIR}/../SDL_mixer)
+add_subdirectory(../submodules/SDL_ttf ${CMAKE_BINARY_DIR}/../SDL_ttf)
 
 include_directories(
   ../submodules/SDL/include
@@ -28,10 +32,10 @@ include_directories(
   ../submodules/SDL_ttf/include
 )
 link_directories(
-  ${CMAKE_BINARY_DIR}/SDL
-  ${CMAKE_BINARY_DIR}/SDL_image
-  ${CMAKE_BINARY_DIR}/SDL_mixer
-  ${CMAKE_BINARY_DIR}/SDL_ttf
+  ${CMAKE_BINARY_DIR}/../SDL
+  ${CMAKE_BINARY_DIR}/../SDL_image
+  ${CMAKE_BINARY_DIR}/../SDL_mixer
+  ${CMAKE_BINARY_DIR}/../SDL_ttf
 )
 
 add_executable(${PROJECT_NAME} src/main.c src/utils.c)
@@ -43,3 +47,5 @@ target_link_libraries(${PROJECT_NAME}
   freetype png
   z bz2 stdc++
 )
+
+ctr_create_3dsx(${PROJECT_NAME})
