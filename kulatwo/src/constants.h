@@ -17,6 +17,11 @@
     #define BALL_PATH "/dev_hdd0/game/KULA00002/USRDIR/assets/drakt1.png"
     #define FONT_PATH "/dev_hdd0/game/KULA00002/USRDIR/assets/skrifttype.ttf"
     #define MUSIC_PATH "/dev_hdd0/game/KULA00002/USRDIR/assets/mortietunes.mp3"
+#elif defined(__3DS__)
+    #define BACKGROUND_PATH "romfs:/blue_sky.png"
+    #define BALL_PATH "romfs:/drakt1.png"
+    #define FONT_PATH "romfs:/skrifttype.ttf"
+    #define MUSIC_PATH "romfs:/mortietunes.mp3"
 #else
     #define BACKGROUND_PATH "assets/blue_sky.png"
     #define BALL_PATH "assets/drakt1.png"
