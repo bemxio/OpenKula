@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   if(DEFINED ENV{DEVKITPRO})
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{DEVKITPRO}/cmake/3DS.cmake" CACHE PATH "toolchain file")
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{DEVKITPRO}/cmake/3DS.cmake" CACHE FILEPATH "CMake toolchain file")
   else()
     message(FATAL_ERROR "Please define $DEVKITPRO to point to your toolchain path!")
   endif()
@@ -16,9 +16,9 @@ execute_process(COMMAND git rev-parse --short HEAD
   ERROR_QUIET
 )
 
-set(SMDH_NAME "Kula")
-#set(SMDH_ICON ${CMAKE_BINARY_DIR}/icon.png)
-set(CTR_3DSXTOOL_ROMFS ${CMAKE_SOURCE_DIR}/assets)
+set(SMDH_NAME "Kula" CACHE STRING "Name of the 3DS application")
+#set(SMDH_ICON ${CMAKE_BINARY_DIR}/icon.png CACHE FILEPATH "Path to the SMDH icon file")
+set(CTR_3DSXTOOL_ROMFS ${CMAKE_SOURCE_DIR}/assets CACHE PATH "Path to the ROMFS directory")
 
 add_subdirectory(../submodules/SDL ${CMAKE_BINARY_DIR}/../SDL)
 add_subdirectory(../submodules/SDL_image ${CMAKE_BINARY_DIR}/../SDL_image)
