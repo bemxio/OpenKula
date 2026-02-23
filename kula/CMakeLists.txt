@@ -17,8 +17,9 @@ execute_process(COMMAND git rev-parse --short HEAD
 )
 
 set(SMDH_NAME "Kula" CACHE STRING "Name of the 3DS application")
-#set(SMDH_ICON ${CMAKE_BINARY_DIR}/icon.png CACHE FILEPATH "Path to the SMDH icon file")
+set(SMDH_ICON ${CMAKE_BINARY_DIR}/icon.png CACHE FILEPATH "Path to the SMDH icon file")
 set(CTR_3DSXTOOL_ROMFS ${CMAKE_SOURCE_DIR}/assets CACHE PATH "Path to the ROMFS directory")
+set(CTR_3DSXTOOL_OUTPUT ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-${PROJECT_VERSION}-3ds.3dsx CACHE PATH "Path to the built 3DSX executable")
 
 add_subdirectory(../submodules/SDL ${CMAKE_BINARY_DIR}/../SDL)
 add_subdirectory(../submodules/SDL_image ${CMAKE_BINARY_DIR}/../SDL_image)
@@ -46,6 +47,11 @@ target_link_libraries(${PROJECT_NAME}
   SDL2 SDL2main
   freetype png
   z bz2 stdc++
+)
+
+add_custom_target(${PROJECT_NAME}_icon ALL
+  COMMAND magick ${CMAKE_SOURCE_DIR}/assets/kula.png -resize 48x48\! ${SMDH_ICON}
+  DEPENDS ${CMAKE_SOURCE_DIR}/assets/kula.png
 )
 
 ctr_create_3dsx(${PROJECT_NAME})
