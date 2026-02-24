@@ -18,7 +18,7 @@ To build one of the game targets, follow steps for your target platform below.
 ### Prerequisites
 Before building, ensure you have the following dependencies installed:
 
-- [devkitARM](https://github.com/devkitpro/) with the `wii-dev` metapackage
+- [devkitPro](https://github.com/devkitpro/) with the `wii-dev` metapackage
 - [SDL2](https://www.libsdl.org/) with [SDL2_image](https://www.libsdl.org/projects/SDL_image/), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 - [Python](https://www.python.org/) 3.6+ with [CairoSVG](https://cairosvg.org/)
 - [ImageMagick](https://imagemagick.org/) 7+
