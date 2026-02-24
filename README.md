@@ -5,7 +5,8 @@ A recreation of Kula, Kula 2 and Kula 3D from the [Kula Collection](https://stor
 OpenKula has been ported to and tested on various platforms, with varying levels of playability:
 
 - [PC (Windows, Linux, BSD etc.)](https://github.com/bemxio/OpenKula/tree/main)
-- Nintendo Wii (minor performance issues)
+- [Nintendo 3DS](https://github.com/bemxio/OpenKula/tree/3ds) (major performance issues)
+- Nintendo Wii
 - [PlayStation 3](https://github.com/bemxio/OpenKula/tree/ps3) (unplayable, crashes on real hardware)
 - [PlayStation Portable](https://github.com/bemxio/OpenKula/tree/psp) (text rendering issues)
 - [PlayStation Vita](https://github.com/bemxio/OpenKula/tree/vita)
@@ -17,7 +18,7 @@ To build one of the game targets, follow steps for your target platform below.
 ### Prerequisites
 Before building, ensure you have the following dependencies installed:
 
-- [GCC](https://gcc.gnu.org/) 9.x+ or [Clang](https://clang.llvm.org/) (GCC is used by default, Clang can be used by setting the `CC` environment variable)
+- [devkitARM](https://github.com/devkitpro/) with the `wii-dev` metapackage
 - [SDL2](https://www.libsdl.org/) with [SDL2_image](https://www.libsdl.org/projects/SDL_image/), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 - [Python](https://www.python.org/) 3.6+ with [CairoSVG](https://cairosvg.org/)
 - [ImageMagick](https://imagemagick.org/) 7+
