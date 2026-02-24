@@ -5,26 +5,12 @@ A recreation of Kula, Kula 2 and Kula 3D from the [Kula Collection](https://stor
 OpenKula has been ported to and tested on various platforms, with varying levels of playability:
 
 - PC (Windows, Linux, BSD etc.)
-- [Nintendo Wii](https://github.com/bemxio/OpenKula/tree/wii) (minor performance issues)
+- [Nintendo 3DS](https://github.com/bemxio/OpenKula/tree/3ds) (major performance issues)
+- [Nintendo Wii](https://github.com/bemxio/OpenKula/tree/wii)
 - [PlayStation 3](https://github.com/bemxio/OpenKula/tree/ps3) (unplayable, crashes on real hardware)
 - [PlayStation Portable](https://github.com/bemxio/OpenKula/tree/psp) (text rendering issues)
 - [PlayStation Vita](https://github.com/bemxio/OpenKula/tree/vita)
 - [Xbox](https://github.com/bemxio/OpenKula/tree/xbox) (major performance issues)
-
-<!--
-My goal is to port OpenKula to all consoles and I (or my friends) own, and so here's a list of potential future platforms:
-
-- Nintendo DS (SDL1)
-- Nintendo 3DS
-- PlayStation 2
-- PlayStation 3 (SDL1)
-- Sega Dreamcast (SDL1)
-- Xbox (SDL1/RXDK)
-- Xbox 360 (SDL1)
-- Xbox One/Series X/S
-
-Some do require an SDL1 backport, and if I really feel dedicated to this, a full migration from SDL to the platform's SDK.
--->
 
 ## Building
 To build one of the game targets, follow steps for your target platform below.
