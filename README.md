@@ -5,7 +5,8 @@ A recreation of Kula, Kula 2 and Kula 3D from the [Kula Collection](https://stor
 OpenKula has been ported to and tested on various platforms, with varying levels of playability:
 
 - [PC (Windows, Linux, BSD etc.)](https://github.com/bemxio/OpenKula/tree/main)
-- [Nintendo Wii](https://github.com/bemxio/OpenKula/tree/wii) (minor performance issues)
+- [Nintendo 3DS](https://github.com/bemxio/OpenKula/tree/3ds) (major performance issues)
+- [Nintendo Wii](https://github.com/bemxio/OpenKula/tree/wii)
 - PlayStation 3 (unplayable, crashes on real hardware)
 - [PlayStation Portable](https://github.com/bemxio/OpenKula/tree/psp) (text rendering issues)
 - [PlayStation Vita](https://github.com/bemxio/OpenKula/tree/vita)
