@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#if defined(NXDK)
+#if defined(NXDK) || defined(__3DS__)
     #include <SDL.h>
     #include <SDL_ttf.h>
 #else
