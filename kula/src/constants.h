@@ -21,6 +21,13 @@
     #define ENEMY_OPEN_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/fiende01.png"
     #define FONT_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/skrifttype.ttf"
     #define PLAYER_PATH "/dev_hdd0/game/KULA00001/USRDIR/assets/kula.png"
+#elif defined(__3DS__)
+    #define BACKGROUND_PATH "romfs:/kulabakgrunn.png"
+    #define BGM_PATH "romfs:/mortietunes.mp3"
+    #define ENEMY_CLOSED_PATH "romfs:/fiende02.png"
+    #define ENEMY_OPEN_PATH "romfs:/fiende01.png"
+    #define FONT_PATH "romfs:/skrifttype.ttf"
+    #define PLAYER_PATH "romfs:/kula.png"
 #else
     #define BACKGROUND_PATH "assets/kulabakgrunn.png"
     #define BGM_PATH "assets/mortietunes.mp3"
