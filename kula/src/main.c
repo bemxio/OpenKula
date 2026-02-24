@@ -6,6 +6,11 @@
     #include <SDL_ttf.h>
 
     #include "../../mixer/mixer.h"
+#elif defined(__3DS__)
+    #include <SDL.h>
+    #include <SDL_image.h>
+    #include <SDL_mixer.h>
+    #include <SDL_ttf.h>
 #else
     #include <SDL2/SDL.h>
     #include <SDL2/SDL_image.h>
@@ -142,6 +147,8 @@ int main(int argc, char* argv[]) {
             480, 272,
         #elif defined(__PPU__)
             1280, 720,
+        #elif defined(__3DS__)
+            400, 240,
         #else
             GAME_WIDTH, GAME_HEIGHT,
         #endif

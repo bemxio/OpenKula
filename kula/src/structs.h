@@ -6,6 +6,10 @@
     #include <SDL_ttf.h>
 
     #include "../../mixer/mixer.h"
+#elif defined(__3DS__)
+    #include <SDL.h>
+    #include <SDL_mixer.h>
+    #include <SDL_ttf.h>
 #else
     #include <SDL2/SDL.h>
     #include <SDL2/SDL_mixer.h>
