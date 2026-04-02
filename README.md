@@ -11,6 +11,7 @@ OpenKula has been ported to and tested on various platforms, with varying levels
 - [PlayStation Portable](https://github.com/bemxio/OpenKula/tree/psp) (text rendering issues)
 - [PlayStation Vita](https://github.com/bemxio/OpenKula/tree/vita)
 - [Xbox](https://github.com/bemxio/OpenKula/tree/xbox) (major performance issues)
+- [WASM](https://github.com/bemxio/OpenKula/tree/wasm)
 
 <!--
 My goal is to port OpenKula to all consoles and I (or my friends) own, and so here's a list of potential future platforms:
@@ -38,7 +39,7 @@ Before building, ensure you have the following dependencies installed:
 - [Python](https://www.python.org/) 3.6+ with [CairoSVG](https://cairosvg.org/)
 - [GNU Make](https://www.gnu.org/software/make/)
 - [Git](https://git-scm.com/)
-- (Optional) [MinGW-w64](https://www.mingw-w64.org/) for cross-compiling to Windows
+- [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html) for WebAssembly builds
 
 On Debian-based distributions, you can install everything you need with `apt install build-essential git libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev python3 python3-cairosvg`.
 On Arch-based distros, use `pacman -S base-devel git sdl2 sdl2_image sdl2_mixer sdl2_ttf python python-cairosvg`.
@@ -68,7 +69,7 @@ make WINDOWS=1 <kula|kula3D|kulatwo> # Replace <kula|kula3D|kulatwo> with your d
 
 This will produce an executable file together with the assets inside the `build/<kula|kula3D|kulatwo>` directory. You can also run `make <kula|kula3D|kulatwo> run` to immediately launch the game after building, or `make` to build all three targets at once.
 
-In case of cross-compiling for Windows, you can also bundle the required DLLs and package everything into a ZIP file with `make WINDOWS=1 <kula|kula3D|kulatwo> dist`.
+Browser audio is started on the first user interaction to comply with autoplay restrictions.
 
 ## License
 This project is licensed under the MIT License - see the [`LICENSE`](LICENSE) file for details.
