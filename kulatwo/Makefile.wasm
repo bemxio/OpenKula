@@ -1,0 +1,52 @@
+# constants
+CC = emcc
+CFLAGS = -Wall -fms-extensions -O2 \
+	-sUSE_SDL=2 \
+	-sUSE_SDL_IMAGE=2 \
+	-sSDL2_IMAGE_FORMATS=png \
+	-sUSE_SDL_MIXER=2 \
+	-sSDL2_MIXER_FORMATS=mp3,ogg \
+	-sUSE_SDL_TTF=2 \
+	-sUSE_FREETYPE=1
+LDFLAGS = $(CFLAGS) \
+	-sALLOW_MEMORY_GROWTH=1 \
+	--use-preload-plugins \
+	--preload-file $(ASSETS_DIR)@/assets \
+	--shell-file ../web/shell.html \
+	-lm
+
+SRC_DIR = src
+ASSETS_DIR = assets
+BUILD_DIR = ../build/kulatwo
+export EM_CACHE ?= $(abspath ../build/.emcache)
+
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
+HEADERS = $(wildcard $(SRC_DIR)/*.h)
+OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.wasm.o,$(SOURCES))
+
+EXECUTABLE = index.html
+
+# phony
+.PHONY: all clean distclean run
+
+# targets
+all: $(BUILD_DIR)/$(EXECUTABLE)
+
+clean:
+	$(RM) -r $(BUILD_DIR)
+
+distclean: clean
+	$(RM) -r $(ASSETS_DIR)
+
+run: $(BUILD_DIR)/$(EXECUTABLE)
+	emrun $<
+
+# rules
+$(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS) | $(BUILD_DIR)
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+
+$(BUILD_DIR)/%.wasm.o: $(SRC_DIR)/%.c | $(HEADERS) $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR):
+	mkdir -p $@

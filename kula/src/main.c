@@ -6,11 +6,6 @@
     #include <SDL_ttf.h>
 
     #include "../../mixer/mixer.h"
-#elif defined(__3DS__)
-    #include <SDL.h>
-    #include <SDL_image.h>
-    #include <SDL_mixer.h>
-    #include <SDL_ttf.h>
 #else
     #include <SDL2/SDL.h>
     #include <SDL2/SDL_image.h>
@@ -18,11 +13,30 @@
     #include <SDL2/SDL_ttf.h>
 #endif
 
+#include <emscripten.h>
+
 #include <stdbool.h>
 
 #include "constants.h"
 #include "structs.h"
 #include "utils.h"
+
+struct App {
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_GameController* controller;
+
+    GameState state;
+    GameAssets assets;
+
+    bool loop;
+    bool audioStarted;
+
+    int screenWidth;
+    int screenHeight;
+};
+
+typedef struct App App;
 
 void GameLogic(GameState* state) {
     if (!state->player.glideState.active) {
@@ -126,39 +140,8 @@ void GameRender(SDL_Renderer* renderer, GameState* state, GameAssets* assets) {
     RenderScore(renderer, assets->font, state->score);
 }
 
-int main(int argc, char* argv[]) {
-    #if defined(NXDK)
-        XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
-    #endif
-
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
-    IMG_Init(IMG_INIT_PNG);
-    TTF_Init();
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-
-    SDL_Window* window = SDL_CreateWindow(
-        WINDOW_TITLE,
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        #if defined(__wii__) || defined(NXDK)
-            640, 480,
-        #elif defined(__vita__)
-            960, 544,
-        #elif defined(PSP)
-            480, 272,
-        #elif defined(__PPU__)
-            1280, 720,
-        #elif defined(__3DS__)
-            400, 240,
-        #else
-            GAME_WIDTH, GAME_HEIGHT,
-        #endif
-        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
-    );
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_GameController* controller = NULL;
-    SDL_Event event;
-
-    GameState state = {
+static GameState GameStateCreate(void) {
+    return (GameState) {
         .score = 0,
         .scoreTimer = 0,
 
@@ -198,7 +181,10 @@ int main(int argc, char* argv[]) {
 
         .controls = 0
     };
-    GameAssets assets = {
+}
+
+static GameAssets GameAssetsLoad(SDL_Renderer* renderer) {
+    return (GameAssets) {
         .background = IMG_LoadTexture(renderer, BACKGROUND_PATH),
         .music = Mix_LoadMUS(BGM_PATH),
         .font = TTF_OpenFont(FONT_PATH, SCORE_SIZE),
@@ -207,131 +193,128 @@ int main(int argc, char* argv[]) {
         .enemyOpen = IMG_LoadTexture(renderer, ENEMY_OPEN_PATH),
         .enemyClosed = IMG_LoadTexture(renderer, ENEMY_CLOSED_PATH)
     };
+}
 
-    bool loop = true;
+static void AppUpdateRenderScale(App* app, int width, int height) {
+    app->screenWidth = width;
+    app->screenHeight = height;
 
-    int screenWidth;
-    int screenHeight;
-
-    SDL_GetWindowSize(window, &screenWidth, &screenHeight);
-    SDL_RenderSetScale(renderer,
-        (float)screenWidth / GAME_WIDTH,
-        (float)screenHeight / GAME_HEIGHT
+    SDL_RenderSetScale(
+        app->renderer,
+        (float)width / GAME_WIDTH,
+        (float)height / GAME_HEIGHT
     );
+}
 
-    #if defined(__wii__)
-        SDL_ShowCursor(SDL_DISABLE);
-    #endif
-
-    Mix_PlayMusic(assets.music, -1);
-
-    while (loop) {
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    loop = false; break;
-
-                case SDL_WINDOWEVENT:
-                    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-                        SDL_RenderSetScale(renderer,
-                            (float)event.window.data1 / GAME_WIDTH,
-                            (float)event.window.data2 / GAME_HEIGHT
-                        );
-                    }
-
-                    break;
-
-                case SDL_KEYDOWN:
-                    if (event.key.repeat) break;
-
-                    switch (event.key.keysym.scancode) {
-                        case SDL_SCANCODE_LEFT:
-                            state.controls |= 1 << 0; break;
-                        case SDL_SCANCODE_RIGHT:
-                            state.controls |= 1 << 1; break;
-                        case SDL_SCANCODE_SPACE:
-                            state.controls |= 1 << 2; break;
-                        default:
-                            break;
-                    }
-
-                    break;
-
-                case SDL_KEYUP:
-                    switch (event.key.keysym.scancode) {
-                        case SDL_SCANCODE_LEFT:
-                            state.controls &= ~(1 << 0); break;
-                        case SDL_SCANCODE_RIGHT:
-                            state.controls &= ~(1 << 1); break;
-                        case SDL_SCANCODE_SPACE:
-                            state.controls &= ~(1 << 2); break;
-                        default:
-                            break;
-                    }
-
-                    break;
-
-                case SDL_CONTROLLERDEVICEADDED:
-                    if (controller == NULL) {
-                        controller = SDL_GameControllerOpen(event.cdevice.which);
-                    }
-
-                    break;
-
-                case SDL_CONTROLLERDEVICEREMOVED:
-                    if (SDL_GameControllerFromInstanceID(event.cdevice.which) == controller) {
-                        SDL_GameControllerClose(controller); controller = NULL;
-                    }
-
-                    break;
-
-                case SDL_CONTROLLERBUTTONDOWN:
-                    switch (event.cbutton.button) {
-                        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                            state.controls |= 1 << 0; break;
-                        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                            state.controls |= 1 << 1; break;
-                        case SDL_CONTROLLER_BUTTON_A:
-                            state.controls |= 1 << 2; break;
-                        case SDL_CONTROLLER_BUTTON_BACK:
-                            loop = false; break;
-                    }
-
-                    break;
-
-                case SDL_CONTROLLERBUTTONUP:
-                    switch (event.cbutton.button) {
-                        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                            state.controls &= ~(1 << 0); break;
-                        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                            state.controls &= ~(1 << 1); break;
-                        case SDL_CONTROLLER_BUTTON_A:
-                            state.controls &= ~(1 << 2); break;
-                    }
-
-                    break;
-            }
-        }
-
-        SDL_RenderClear(renderer);
-
-        GameLogic(&state);
-        GameRender(renderer, &state, &assets);
-
-        SDL_RenderPresent(renderer);
-        SDL_Delay(1000 / FPS);
+static void AppStartMusic(App* app) {
+    if (app->audioStarted || app->assets.music == NULL) {
+        return;
     }
 
-    SDL_DestroyTexture(assets.background);
-    Mix_FreeMusic(assets.music);
-    TTF_CloseFont(assets.font);
-    SDL_DestroyTexture(assets.player);
-    SDL_DestroyTexture(assets.enemyOpen);
-    SDL_DestroyTexture(assets.enemyClosed);
+    Mix_PlayMusic(app->assets.music, -1);
+    app->audioStarted = true;
+}
 
-    if (controller != NULL) SDL_GameControllerClose(controller);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+static void AppHandleEvent(App* app, const SDL_Event* event) {
+    switch (event->type) {
+        case SDL_QUIT:
+            app->loop = false; break;
+
+        case SDL_WINDOWEVENT:
+            if (event->window.event == SDL_WINDOWEVENT_RESIZED) {
+                AppUpdateRenderScale(app, event->window.data1, event->window.data2);
+            }
+
+            break;
+
+        case SDL_KEYDOWN:
+            if (event->key.repeat) break;
+
+            AppStartMusic(app);
+
+            switch (event->key.keysym.scancode) {
+                case SDL_SCANCODE_LEFT:
+                    app->state.controls |= 1 << 0; break;
+                case SDL_SCANCODE_RIGHT:
+                    app->state.controls |= 1 << 1; break;
+                case SDL_SCANCODE_SPACE:
+                    app->state.controls |= 1 << 2; break;
+                default:
+                    break;
+            }
+
+            break;
+
+        case SDL_KEYUP:
+            switch (event->key.keysym.scancode) {
+                case SDL_SCANCODE_LEFT:
+                    app->state.controls &= ~(1 << 0); break;
+                case SDL_SCANCODE_RIGHT:
+                    app->state.controls &= ~(1 << 1); break;
+                case SDL_SCANCODE_SPACE:
+                    app->state.controls &= ~(1 << 2); break;
+                default:
+                    break;
+            }
+
+            break;
+
+        case SDL_CONTROLLERDEVICEADDED:
+            if (app->controller == NULL) {
+                app->controller = SDL_GameControllerOpen(event->cdevice.which);
+            }
+
+            break;
+
+        case SDL_CONTROLLERDEVICEREMOVED:
+            if (SDL_GameControllerFromInstanceID(event->cdevice.which) == app->controller) {
+                SDL_GameControllerClose(app->controller);
+                app->controller = NULL;
+            }
+
+            break;
+
+        case SDL_CONTROLLERBUTTONDOWN:
+            AppStartMusic(app);
+
+            switch (event->cbutton.button) {
+                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                    app->state.controls |= 1 << 0; break;
+                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                    app->state.controls |= 1 << 1; break;
+                case SDL_CONTROLLER_BUTTON_A:
+                    app->state.controls |= 1 << 2; break;
+                case SDL_CONTROLLER_BUTTON_BACK:
+                    app->loop = false; break;
+            }
+
+            break;
+
+        case SDL_CONTROLLERBUTTONUP:
+            switch (event->cbutton.button) {
+                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                    app->state.controls &= ~(1 << 0); break;
+                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                    app->state.controls &= ~(1 << 1); break;
+                case SDL_CONTROLLER_BUTTON_A:
+                    app->state.controls &= ~(1 << 2); break;
+            }
+
+            break;
+    }
+}
+
+static void AppShutdown(App* app) {
+    SDL_DestroyTexture(app->assets.background);
+    Mix_FreeMusic(app->assets.music);
+    TTF_CloseFont(app->assets.font);
+    SDL_DestroyTexture(app->assets.player);
+    SDL_DestroyTexture(app->assets.enemyOpen);
+    SDL_DestroyTexture(app->assets.enemyClosed);
+
+    if (app->controller != NULL) SDL_GameControllerClose(app->controller);
+    SDL_DestroyRenderer(app->renderer);
+    SDL_DestroyWindow(app->window);
 
     Mix_CloseAudio();
     Mix_Quit();
@@ -339,6 +322,79 @@ int main(int argc, char* argv[]) {
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
+}
+
+static void AppTick(void* userdata) {
+    App* app = userdata;
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event)) {
+        AppHandleEvent(app, &event);
+    }
+
+    if (!app->loop) {
+        emscripten_cancel_main_loop();
+        AppShutdown(app);
+
+        return;
+    }
+
+    SDL_RenderClear(app->renderer);
+
+    GameLogic(&app->state);
+    GameRender(app->renderer, &app->state, &app->assets);
+
+    SDL_RenderPresent(app->renderer);
+}
+
+int main(int argc, char* argv[]) {
+    #if defined(NXDK)
+        XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
+    #endif
+
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
+    IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
+    SDL_Window* window = SDL_CreateWindow(
+        WINDOW_TITLE,
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        #if defined(__wii__) || defined(NXDK)
+            640, 480,
+        #elif defined(__vita__)
+            960, 544,
+        #elif defined(PSP)
+            480, 272,
+        #elif defined(__PPU__)
+            1280, 720,
+        #else
+            GAME_WIDTH, GAME_HEIGHT,
+        #endif
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+    );
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
+    App app = {
+        .window = window,
+        .renderer = renderer,
+        .controller = NULL,
+        .state = GameStateCreate(),
+        .assets = GameAssetsLoad(renderer),
+        .loop = true,
+        .audioStarted = false,
+        .screenWidth = 0,
+        .screenHeight = 0
+    };
+
+    SDL_GetWindowSize(window, &app.screenWidth, &app.screenHeight);
+    AppUpdateRenderScale(&app, app.screenWidth, app.screenHeight);
+
+    #if defined(__wii__)
+        SDL_ShowCursor(SDL_DISABLE);
+    #endif
+
+    emscripten_set_main_loop_arg(AppTick, &app, FPS, true);
 
     return 0;
 }
